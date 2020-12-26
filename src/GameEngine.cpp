@@ -2,4 +2,4 @@
 #error Please define 'RED4EXT_STATIC_LIB' to compile this file.
 #endif
 
-#include <RED4ext/RED4ext.hpp>
+#include <RED4ext/GameEngine-inl.hpp>
