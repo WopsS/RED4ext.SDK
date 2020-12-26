@@ -21,5 +21,11 @@ RED4ext::CName::CName(const char* aName)
 const char* RED4ext::CName::operator()()
 {
     static REDfunc<char* (*)(uint64_t&)> func(Addresses::CNamePool_Get);
-    return func(hash);
+    auto result = func(hash);
+    if (result)
+    {
+        return result;
+    }
+
+    return "ERR_NO_NAME";
 }
