@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <Windows.h>
 
+#include <RED4ext/CName.hpp>
 #include <RED4ext/Common.hpp>
 #include <RED4ext/RTTITypes.hpp>
 
@@ -10,11 +11,11 @@ namespace RED4ext
 {
 struct IRTTISystem
 {
-    virtual IRTTIType* GetType(uint64_t aHash) = 0;
+    virtual IRTTIType* GetType(CName aName) = 0;
     virtual void sub_8() = 0;
-    virtual CClass* GetClass(uint64_t aHash) = 0;
-    virtual IRTTIType* GetEnum(uint64_t aHash) = 0;
-    virtual IRTTIType* BitField(uint64_t aHash) = 0;
+    virtual CClass* GetClass(CName aName) = 0;
+    virtual IRTTIType* GetEnum(CName aName) = 0;
+    virtual IRTTIType* BitField(CName aName) = 0;
     virtual void sub_28() = 0;
     virtual void sub_30() = 0;
     virtual void sub_38() = 0;

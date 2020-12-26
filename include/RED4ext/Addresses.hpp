@@ -5,6 +5,9 @@
 // Addresses for Cyberpunk 2077 1.06
 namespace RED4ext::Addresses
 {
+// 48 83 EC 38 48 8B 11 48 8D 4C 24 20 E8, expected: 1, index: 0
+constexpr uintptr_t CNamePool_Get = 0x1401BC060 - 0x140000000;
+
 // 40 53 48 83 EC 20 65 48 8B 04 25 58 00 00 00 48 8D 1D ? ? ? ?, expected: 1, index: 0
 constexpr uintptr_t CRTTISystem_Get = 0x140267450 - 0x140000000;
 
