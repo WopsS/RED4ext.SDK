@@ -2,10 +2,12 @@
 
 #include <cstdint>
 
+#include <RED4ext/CName.hpp>
+#include <RED4ext/CString.hpp>
 #include <RED4ext/Common.hpp>
 #include <RED4ext/DynamicBuffer.hpp>
+#include <RED4ext/Scripting/Functions.hpp>
 #include <RED4ext/Unks.hpp>
-#include <RED4ext/CString.hpp>
 
 namespace RED4ext
 {
@@ -68,13 +70,15 @@ RED4EXT_ASSERT_SIZE(CRTTIType, 0x10);
 
 struct CClass : CRTTIType
 {
+    CClassFunction* GetFunction(CName aName);
+
     CClass* parent;
     uint64_t name;
     int64_t unk20;
     DynamicBuffer<void*> unk28;
     DynamicBuffer<void*> unk38;
-    DynamicBuffer<void*> unk48;
-    DynamicBuffer<void*> unk58;
+    DynamicBuffer<void*> funcs48;
+    DynamicBuffer<void*> funcs58;
     int32_t unk68;
     int32_t unk6C;
     int32_t unk70;
@@ -108,4 +112,11 @@ struct CClass : CRTTIType
 
 RED4EXT_ASSERT_SIZE(CClass, 0x2A0);
 RED4EXT_ASSERT_OFFSET(CClass, parent, 0x10);
+RED4EXT_ASSERT_OFFSET(CClass, name, 0x18);
+RED4EXT_ASSERT_OFFSET(CClass, funcs48, 0x48);
+RED4EXT_ASSERT_OFFSET(CClass, funcs58, 0x58);
 } // namespace RED4ext
+
+#ifdef RED4EXT_HEADER_ONLY
+#include <RED4ext/RTTITypes-impl.hpp>
+#endif
