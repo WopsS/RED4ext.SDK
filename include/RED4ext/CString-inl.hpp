@@ -38,3 +38,18 @@ RED4ext::CString& RED4ext::CString::operator=(const CString& rhs)
     func(this, rhs);
     return *this;
 }
+
+const char* RED4ext::CString::c_str() const
+{
+    if (length >= 0x40000000u)
+    {
+        return text.ptr;
+    }
+
+    return text.str;
+}
+
+uint32_t RED4ext::CString::Length() const
+{
+    return length & 0x3FFFFFFF;
+}

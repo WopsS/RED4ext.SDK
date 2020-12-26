@@ -18,20 +18,8 @@ struct CString
     CString& operator=(const CString& rhs);
     CString& operator=(CString&& rhs) = delete;
 
-    const char* c_str() const
-    {
-        if (length >= 0x40000000u)
-        {
-            return text.ptr;
-        }
-
-        return text.str;
-    }
-
-    uint32_t Length() const
-    {
-        return length & 0x3FFFFFFF;
-    }
+    const char* c_str() const;
+    uint32_t Length() const;
 
 private:
 #pragma pack(push, 4)
