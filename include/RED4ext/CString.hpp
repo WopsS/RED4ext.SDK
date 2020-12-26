@@ -48,3 +48,7 @@ private:
 
 RED4EXT_ASSERT_SIZE(CString, 0x20);
 } // namespace RED4ext
+
+#ifdef RED4EXT_HEADER_ONLY
+#include <RED4ext/CString-inl.hpp>
+#endif
