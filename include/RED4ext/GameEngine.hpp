@@ -83,5 +83,5 @@ RED4EXT_ASSERT_OFFSET(CGameEngine, framework, 0x260);
 } // namespace RED4ext
 
 #ifdef RED4EXT_HEADER_ONLY
-#include <RED4ext/GameEngine-inl.hpp>
+#include <RED4ext/GameEngine-impl.hpp>
 #endif
