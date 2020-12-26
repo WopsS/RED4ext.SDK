@@ -14,5 +14,4 @@ struct Unk425
     int32_t unk28;
     int32_t unk2C;
 };
-
-}
+} // namespace RED4ext
