@@ -1,0 +1,50 @@
+#pragma once
+
+#include <cstdint>
+#include <RED4ext/Common.hpp>
+
+namespace RED4ext
+{
+struct CString
+{
+    CString();
+    CString(const char* aText);
+
+    CString(const CString& aOther);
+    CString(CString&&) = delete;
+
+    ~CString();
+
+    CString& operator=(const CString& rhs);
+    CString& operator=(CString&& rhs) = delete;
+
+    const char* c_str() const
+    {
+        if (length >= 0x40000000u)
+        {
+            return text.ptr;
+        }
+
+        return text.str;
+    }
+
+    uint32_t Length() const
+    {
+        return length & 0x3FFFFFFF;
+    }
+
+private:
+#pragma pack(push, 4)
+    union
+    {
+        char* ptr;
+        char str[0x14];
+    } text;
+#pragma pack(pop)
+
+    uint32_t length;
+    uint64_t capacity;
+};
+
+RED4EXT_ASSERT_SIZE(CString, 0x20);
+} // namespace RED4ext

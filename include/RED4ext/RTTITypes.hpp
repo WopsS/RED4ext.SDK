@@ -5,6 +5,7 @@
 #include <RED4ext/Common.hpp>
 #include <RED4ext/DynamicBuffer.hpp>
 #include <RED4ext/Unks.hpp>
+#include <RED4ext/CString.hpp>
 
 namespace RED4ext
 {
@@ -31,7 +32,7 @@ enum class ERTTITypeType : uint8_t
 struct IRTTIType
 {
     virtual ~IRTTIType() = 0;
-    virtual uint64_t* GetName(uint64_t* aOut) = 0;
+    virtual uint64_t* GetName(CString& aOut) = 0;
     virtual void sub_10() = 0;
     virtual void sub_18() = 0;
     virtual ERTTITypeType GetType() = 0;
