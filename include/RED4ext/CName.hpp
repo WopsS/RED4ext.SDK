@@ -14,3 +14,7 @@ struct CName
     uint64_t hash;
 };
 } // namespace RED4ext
+
+#ifdef RED4EXT_HEADER_ONLY
+#include <RED4ext/CName-inl.hpp>
+#endif
