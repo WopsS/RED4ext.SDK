@@ -34,11 +34,11 @@ enum class ERTTITypeType : uint8_t
 struct IRTTIType
 {
     virtual ~IRTTIType() = 0;
-    virtual uint64_t* GetName(CString& aOut) = 0;
+    virtual void GetName(CName& aOut) = 0;
     virtual void sub_10() = 0;
     virtual void sub_18() = 0;
     virtual ERTTITypeType GetType() = 0;
-    virtual void sub_28() = 0;
+    virtual void GetTypeName(CString& aOut) = 0;
     virtual void sub_30() = 0;
     virtual void sub_38() = 0;
     virtual void sub_40() = 0;
@@ -70,6 +70,7 @@ RED4EXT_ASSERT_SIZE(CRTTIType, 0x10);
 
 struct CClass : CRTTIType
 {
+    bool IsOfType(IRTTIType* aType);
     CClassFunction* GetFunction(CName aName);
 
     CClass* parent;
