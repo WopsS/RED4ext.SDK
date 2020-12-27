@@ -6,7 +6,7 @@ namespace RED4ext
 {
 struct CName
 {
-    CName(uint64_t aHash);
+    CName(uint64_t aHash = 0);
     CName(const char* aName);
 
     const char* operator()();
