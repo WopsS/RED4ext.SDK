@@ -9,7 +9,7 @@
 
 RED4ext::CClassFunction* RED4ext::CClass::GetFunction(CName aName)
 {
-    using func_t = CClassFunction* (*)(CName);
+    using func_t = CClassFunction* (*)(CClass*, CName);
     static REDfunc<func_t> func(Addresses::CClass_GetFunction);
-    return func(aName);
+    return func(this, aName);
 }
