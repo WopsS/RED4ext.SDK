@@ -14,6 +14,9 @@ constexpr uintptr_t CNamePool_Get = 0x1401BC060 - 0x140000000;
 // 40 53 48 83 EC 20 65 48 8B 04 25 58 00 00 00 48 8D 1D ? ? ? ?, expected: 1, index: 0
 constexpr uintptr_t CRTTISystem_Get = 0x140267450 - 0x140000000;
 
+// 48 89 5C 24 08 48 89 74 24 10 57 48 83 EC 20 48 8D 05 ? ? ? ? 48 C7 41 08 00 00 00 00, expected: 3, index: 1
+constexpr uintptr_t CStack_ctor = 0x14026F8A0 - 0x140000000;
+
 // 40 53 48 83 EC 20 33 C0 C6 01 00, expected: 4, index: 2
 constexpr uintptr_t CString_ctor = 0x1401B6FC0 - 0x140000000;
 
