@@ -1,7 +1,10 @@
 #pragma once
 
 #include <cstdint>
+
 #include <RED4ext/Common.hpp>
+#include <RED4ext/ISerializable.hpp>
+#include <RED4ext/RTTITypes.hpp>
 
 namespace RED4ext
 {
@@ -61,7 +64,7 @@ struct CGameEngine : BaseGameEngine
         struct GameInstance
         {
             virtual ~GameInstance() = 0;
-            virtual uintptr_t GetTypeInstance(const uintptr_t aClass) = 0;
+            virtual ISerializable* GetInstance(const IRTTIType* aType) = 0;
         };
 
         RED4EXT_ASSERT_SIZE(GameInstance, 0x8);
