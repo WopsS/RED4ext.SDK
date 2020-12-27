@@ -2,6 +2,7 @@
 
 #include <cstdint>
 
+#include <RED4ext/CName.hpp>
 #include <RED4ext/Common.hpp>
 #include <RED4ext/DynamicBuffer.hpp>
 
@@ -23,8 +24,8 @@ RED4EXT_ASSERT_SIZE(IFunction, 0x8);
 
 struct CBaseFunction : IFunction
 {
-    uint64_t name;
-    uint64_t name2;
+    CName name;
+    CName name2;
     int64_t unk18;
     int64_t unk20;
     DynamicBuffer<void*> unk28;

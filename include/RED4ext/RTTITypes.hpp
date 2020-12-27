@@ -73,7 +73,7 @@ struct CClass : CRTTIType
     CClassFunction* GetFunction(CName aName);
 
     CClass* parent;
-    uint64_t name;
+    CName name;
     int64_t unk20;
     DynamicBuffer<void*> unk28;
     DynamicBuffer<void*> unk38;
