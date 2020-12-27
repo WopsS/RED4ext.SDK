@@ -7,6 +7,21 @@
 #include <RED4ext/Addresses.hpp>
 #include <RED4ext/REDfunc.hpp>
 
+bool RED4ext::CClass::IsOfType(IRTTIType* aType)
+{
+    if (!parent)
+    {
+        return false;
+    }
+
+    if (parent == aType)
+    {
+        return true;
+    }
+
+    return parent->IsOfType(aType);
+}
+
 RED4ext::CClassFunction* RED4ext::CClass::GetFunction(CName aName)
 {
     using func_t = CClassFunction* (*)(CClass*, CName);

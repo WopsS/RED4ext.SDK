@@ -8,6 +8,11 @@ namespace RED4ext
 template<typename T>
 struct DynamicBuffer
 {
+    T operator[](uint32_t aIndex)
+    {
+        return entries[aIndex];
+    }
+
     T* entries;
     uint32_t capacity;
     uint32_t size;

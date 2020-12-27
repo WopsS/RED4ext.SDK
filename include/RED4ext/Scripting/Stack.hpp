@@ -32,13 +32,24 @@ namespace RED4ext
 
 struct CStackType
 {
+    CStackType(IRTTIType* aType, void* aValue)
+        : type(aType)
+        , value(aValue)
+    {
+    }
+
+    CStackType()
+        : CStackType(nullptr, nullptr)
+    {
+    }
+
     IRTTIType* type;
     void* value;
 };
 
 struct IStack
 {
-    virtual ~IStack() = 0;
+    virtual ~IStack() = default;
     virtual void* GetResultAddr() = 0;
     virtual int64_t sub_10() = 0;
     virtual void sub_18(int64_t a2) = 0;

@@ -5,6 +5,9 @@
 // Addresses for Cyberpunk 2077 1.06
 namespace RED4ext::Addresses
 {
+// 48 89 5C 24 08 57 48 81 EC 90 01 00 00 F6 41 78 01 48 8B DA, expected: 1, index: 0
+constexpr uintptr_t CBaseFunction_Execute = 0x1402249F0 - 0x140000000;
+
 // 4C 8B C9 48 85 C9 74 5E 49 8B 41 48, expected: 1, index: 0
 constexpr uintptr_t CClass_GetFunction = 0x140212D50 - 0x140000000;
 

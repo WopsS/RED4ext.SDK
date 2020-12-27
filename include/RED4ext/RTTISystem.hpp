@@ -6,6 +6,7 @@
 #include <RED4ext/CName.hpp>
 #include <RED4ext/Common.hpp>
 #include <RED4ext/RTTITypes.hpp>
+#include <RED4ext/Scripting/Functions.hpp>
 
 namespace RED4ext
 {
@@ -17,7 +18,7 @@ struct IRTTISystem
     virtual IRTTIType* GetEnum(CName aName) = 0;
     virtual IRTTIType* BitField(CName aName) = 0;
     virtual void sub_28() = 0;
-    virtual void sub_30() = 0;
+    virtual CGlobalFunction* GetFunction(CName aName) = 0;
     virtual void sub_38() = 0;
     virtual void sub_40() = 0;
     virtual void sub_48() = 0;

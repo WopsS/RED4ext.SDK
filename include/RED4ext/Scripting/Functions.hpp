@@ -10,6 +10,7 @@
 namespace RED4ext
 {
 struct CClass;
+struct CStack;
 
 struct IFunction
 {
@@ -25,6 +26,8 @@ RED4EXT_ASSERT_SIZE(IFunction, 0x8);
 
 struct CBaseFunction : IFunction
 {
+    bool Execute(CStack* aStack);
+
     CName name;
     CName name2;
     CProperty* returnType;
@@ -66,3 +69,7 @@ struct CScriptedFunction : CBaseFunction
 RED4EXT_ASSERT_SIZE(CScriptedFunction, 0x88);
 RED4EXT_ASSERT_OFFSET(CScriptedFunction, parent, 0x80);
 } // namespace RED4ext
+
+#ifdef RED4EXT_HEADER_ONLY
+#include <RED4ext/Scripting/Functions-impl.hpp>
+#endif
