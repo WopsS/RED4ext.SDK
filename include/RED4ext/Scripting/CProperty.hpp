@@ -11,7 +11,7 @@ struct CProperty
 {
     IRTTIType* type;
     CName name;
-    int64_t unk10;
+    CName unk10;
     CClass* parent;
     uint32_t flags;
     int64_t unk28;

@@ -10,6 +10,18 @@ namespace RED4ext
 {
 struct CBaseEngine
 {
+    // https://github.com/yamashi/RED4ext/commit/2d30f32826276458f86da8b4c26940924044564d
+    struct UnkC0
+    {
+        uint8_t pad0[0x140];
+        uint32_t unk140;
+        uint8_t pad144[0x164 - 0x144];
+        uint32_t unk164;
+        void* hWnd;
+        uint8_t pad170[0x9];
+        uint8_t isClipped;
+    };
+
     virtual void sub_0() = 0;
     virtual void sub_8() = 0;
     virtual void sub_10() = 0;
@@ -44,10 +56,13 @@ struct CBaseEngine
     virtual void sub_F8() = 0;
     virtual void sub_100() = 0;
 
-    int8_t unk8[0x218];
+    int8_t unk8[0xC0];
+    UnkC0* unkC0;
+    int8_t unkC8[0x150];
 };
 
 RED4EXT_ASSERT_SIZE(CBaseEngine, 0x220);
+RED4EXT_ASSERT_OFFSET(CBaseEngine, unkC0, 0xC0);
 
 struct BaseGameEngine : CBaseEngine
 {

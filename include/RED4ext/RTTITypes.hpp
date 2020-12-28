@@ -205,8 +205,8 @@ struct CClass : CRTTIType
     CClass* parent;
     CName name;
     CName name2;
-    DynArray<void*> unk28;
-    DynArray<void*> unk38;
+    DynArray<CProperty*> props;
+    DynArray<CProperty*> overriddenProps;
     DynArray<CBaseFunction*> funcs;
     DynArray<CBaseFunction*> staticFuncs;
     uint32_t size; // The size of the real class that can be constructed.

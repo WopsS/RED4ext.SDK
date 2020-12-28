@@ -13,7 +13,7 @@ namespace RED4ext
 struct IRTTISystem
 {
     virtual IRTTIType* GetType(CName aName) = 0;
-    virtual void sub_8() = 0;
+    virtual void GetTypeByAsyncId(uint32_t aAsyncId) = 0;
     virtual CClass* GetClass(CName aName) = 0;
     virtual IRTTIType* GetEnum(CName aName) = 0;
     virtual IRTTIType* BitField(CName aName) = 0;
@@ -56,10 +56,10 @@ struct CRTTISystem : IRTTISystem
 {
     static CRTTISystem* Get();
 
-    Unk425 unk8;
-    Unk425 unk38;
-    Unk425 unk68;
-    Unk425 unk98;
+    Unk425 types;
+    Unk425 typeByIds;
+    Unk425 typeIds;
+    Unk425 funcs;
     Unk425 unkC8;
     Unk425 unkF8;
     int64_t unk128;
