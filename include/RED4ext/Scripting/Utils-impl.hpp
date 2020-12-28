@@ -53,7 +53,7 @@ bool RED4ext::ExecuteFunction(CName aParent, CName aFunc, void* aOut, std::vecto
     }
 
     static auto scriptable = rtti->GetClass("IScriptable");
-    if (!type->IsOfType(scriptable))
+    if (!type->IsA(scriptable))
     {
         return false;
     }
@@ -88,7 +88,7 @@ bool RED4ext::ExecuteGlobalFunction(CName aContext, CName aFunc, void* aOut, std
     }
 
     static auto scriptable = rtti->GetClass("IScriptable");
-    if (!type->IsOfType(scriptable))
+    if (!type->IsA(scriptable))
     {
         return false;
     }

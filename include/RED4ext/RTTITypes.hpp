@@ -70,7 +70,7 @@ RED4EXT_ASSERT_SIZE(CRTTIType, 0x10);
 
 struct CClass : CRTTIType
 {
-    bool IsOfType(IRTTIType* aType);
+    bool IsA(IRTTIType* aType);
     CClassFunction* GetFunction(CName aName);
 
     CClass* parent;

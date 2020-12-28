@@ -7,19 +7,19 @@
 #include <RED4ext/Addresses.hpp>
 #include <RED4ext/REDfunc.hpp>
 
-bool RED4ext::CClass::IsOfType(IRTTIType* aType)
+bool RED4ext::CClass::IsA(IRTTIType* aType)
 {
-    if (!parent)
-    {
-        return false;
-    }
-
-    if (parent == aType)
+    if (this == aType)
     {
         return true;
     }
 
-    return parent->IsOfType(aType);
+    if (parent)
+    {
+        return parent->IsA(aType);
+    }
+
+    return false;
 }
 
 RED4ext::CClassFunction* RED4ext::CClass::GetFunction(CName aName)
