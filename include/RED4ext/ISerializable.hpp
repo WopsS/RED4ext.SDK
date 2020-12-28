@@ -1,9 +1,12 @@
 #pragma once
 
-#include <RED4ext/RTTITypes.hpp>
+#include <cstdint>
+#include <RED4ext/Common.hpp>
 
 namespace RED4ext
 {
+struct IRTTIType;
+
 struct ISerializable
 {
     virtual IRTTIType* GetType() = 0;

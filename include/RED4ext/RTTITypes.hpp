@@ -1,12 +1,10 @@
 #pragma once
 
-#include <cstdint>
-
 #include <RED4ext/CName.hpp>
 #include <RED4ext/CString.hpp>
-#include <RED4ext/Common.hpp>
 #include <RED4ext/DynamicBuffer.hpp>
 #include <RED4ext/Scripting/Functions.hpp>
+#include <RED4ext/Scripting/IScriptable.hpp>
 #include <RED4ext/Unks.hpp>
 
 namespace RED4ext
@@ -34,14 +32,15 @@ enum class ERTTITypeType : uint8_t
 struct IRTTIType
 {
     virtual ~IRTTIType() = 0;
+
     virtual void GetName(CName& aOut) = 0;
-    virtual void sub_10() = 0;
+    virtual uint32_t GetSize() = 0;
     virtual void sub_18() = 0;
     virtual ERTTITypeType GetType() = 0;
     virtual void GetTypeName(CString& aOut) = 0;
     virtual void sub_30() = 0;
-    virtual void sub_38() = 0;
-    virtual void sub_40() = 0;
+    virtual void Construct(void* aMemory) = 0;
+    virtual void Destruct(void* aMemory) = 0;
     virtual void sub_48() = 0;
     virtual void sub_50() = 0;
     virtual void sub_58() = 0;
@@ -68,8 +67,135 @@ struct CRTTIType : IRTTIType
 
 RED4EXT_ASSERT_SIZE(CRTTIType, 0x10);
 
+struct BoolType : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(BoolType, 0x10);
+
+struct Int8Type : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(Int8Type, 0x10);
+
+struct Uint8Type : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(Uint8Type, 0x10);
+
+struct Int16Type : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(Int16Type, 0x10);
+
+struct Uint16Type : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(Uint16Type, 0x10);
+
+struct Int32Type : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(Int32Type, 0x10);
+
+struct Uint32Type : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(Uint32Type, 0x10);
+
+struct Int64Type : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(Int32Type, 0x10);
+
+struct Uint64Type : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(Uint64Type, 0x10);
+
+struct FloatType : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(FloatType, 0x10);
+
+struct DoubleType : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(DoubleType, 0x10);
+
+struct StringType : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(StringType, 0x10);
+
+struct CNameType : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(CNameType, 0x10);
+
+struct CDateTimeType : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(CDateTimeType, 0x10);
+
+struct CGUIDType : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(CGUIDType, 0x10);
+
+struct CRUIDType : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(CRUIDType, 0x10);
+
+struct CRUIDRefType : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(CRUIDRefType, 0x10);
+
+struct TweakDBIDType : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(TweakDBIDType, 0x10);
+
+struct EditorObjectIDType : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(EditorObjectIDType, 0x10);
+
+struct VariantType : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(VariantType, 0x10);
+
 struct CClass : CRTTIType
 {
+    virtual void sub_C0() = 0;
+    virtual void sub_C8() = 0;
+    virtual void sub_D0() = 0;
+    virtual void ConstructClass(IScriptable* aMemory) = 0;
+    virtual void DestroyClass(IScriptable* aMemory) = 0;
+    virtual void sub_E8() = 0;
+
     bool IsA(IRTTIType* aType);
     CClassFunction* GetFunction(CName aName);
 
@@ -80,9 +206,9 @@ struct CClass : CRTTIType
     DynamicBuffer<void*> unk38;
     DynamicBuffer<CBaseFunction*> funcs;
     DynamicBuffer<CBaseFunction*> staticFuncs;
-    int32_t unk68;
+    uint32_t size; // The size of the real class that can be constructed.
     int32_t unk6C;
-    int32_t unk70;
+    uint32_t flags;
     int32_t unk74;
     int64_t unk78;
     int64_t unk80;
@@ -116,6 +242,54 @@ RED4EXT_ASSERT_OFFSET(CClass, parent, 0x10);
 RED4EXT_ASSERT_OFFSET(CClass, name, 0x18);
 RED4EXT_ASSERT_OFFSET(CClass, funcs, 0x48);
 RED4EXT_ASSERT_OFFSET(CClass, staticFuncs, 0x58);
+
+struct DataBufferType : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(DataBufferType, 0x10);
+
+struct SharedDataBufferType : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(SharedDataBufferType, 0x10);
+
+struct serializationDeferredDataBufferType : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(serializationDeferredDataBufferType, 0x10);
+
+struct gamedataLocKeyWrapperType : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(gamedataLocKeyWrapperType, 0x10);
+
+struct LocalizationStringType : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(LocalizationStringType, 0x10);
+
+struct MessageResourcePathType : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(MessageResourcePathType, 0x10);
+
+struct NodeRefType : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(NodeRefType, 0x10);
+
+struct RuntimeEntityRefType : CRTTIType
+{
+};
+
+RED4EXT_ASSERT_SIZE(RuntimeEntityRefType, 0x10);
 } // namespace RED4ext
 
 #ifdef RED4EXT_HEADER_ONLY
