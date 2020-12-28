@@ -10,7 +10,7 @@
 
 namespace RED4ext
 {
-enum class ERTTITypeType : uint8_t
+enum class ERTTIType : uint8_t
 {
     Name = 0,
     Fundamental = 1,
@@ -36,8 +36,8 @@ struct IRTTIType
 
     virtual void GetName(CName& aOut) = 0;
     virtual uint32_t GetSize() = 0;
-    virtual ERTTITypeType GetType() = 0;
     virtual uint32_t GetAlignment() = 0;
+    virtual ERTTIType GetType() = 0;
     virtual void GetTypeName(CString& aOut) = 0;
     virtual void GetName2(CName& aOut) = 0;
     virtual void Init(void* aMemory) = 0;
