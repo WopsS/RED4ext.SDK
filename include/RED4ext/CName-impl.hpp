@@ -18,7 +18,7 @@ RED4ext::CName::CName(const char* aName)
 {
 }
 
-const char* RED4ext::CName::operator()()
+const char* RED4ext::CName::ToString()
 {
     static REDfunc<char* (*)(uint64_t&)> func(Addresses::CNamePool_Get);
     auto result = func(hash);
