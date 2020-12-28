@@ -4,7 +4,7 @@
 
 #include <RED4ext/CName.hpp>
 #include <RED4ext/Common.hpp>
-#include <RED4ext/DynamicBuffer.hpp>
+#include <RED4ext/DynArray.hpp>
 #include <RED4ext/Scripting/CProperty.hpp>
 
 namespace RED4ext
@@ -32,8 +32,8 @@ struct CBaseFunction : IFunction
     CName name2;
     CProperty* returnType;
     int64_t unk20;
-    DynamicBuffer<CProperty*> params;
-    DynamicBuffer<CProperty*> localVars;
+    DynArray<CProperty*> params;
+    DynArray<CProperty*> localVars;
     int8_t unk48[0x30];
     uint32_t flags;
     uint32_t unk7C;

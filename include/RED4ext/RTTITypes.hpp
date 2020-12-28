@@ -2,7 +2,7 @@
 
 #include <RED4ext/CName.hpp>
 #include <RED4ext/CString.hpp>
-#include <RED4ext/DynamicBuffer.hpp>
+#include <RED4ext/DynArray.hpp>
 #include <RED4ext/Scripting/Functions.hpp>
 #include <RED4ext/Scripting/IScriptable.hpp>
 #include <RED4ext/Unks.hpp>
@@ -202,10 +202,10 @@ struct CClass : CRTTIType
     CClass* parent;
     CName name;
     int64_t unk20;
-    DynamicBuffer<void*> unk28;
-    DynamicBuffer<void*> unk38;
-    DynamicBuffer<CBaseFunction*> funcs;
-    DynamicBuffer<CBaseFunction*> staticFuncs;
+    DynArray<void*> unk28;
+    DynArray<void*> unk38;
+    DynArray<CBaseFunction*> funcs;
+    DynArray<CBaseFunction*> staticFuncs;
     uint32_t size; // The size of the real class that can be constructed.
     int32_t unk6C;
     uint32_t flags;
@@ -222,14 +222,14 @@ struct CClass : CRTTIType
     int32_t unk108;
     int32_t unk10C;
     int64_t unk110;
-    DynamicBuffer<void*> unk118;
-    DynamicBuffer<void*> unk128;
-    DynamicBuffer<void*> unk138;
-    DynamicBuffer<void*> unk148;
-    DynamicBuffer<void*> unk158;
-    DynamicBuffer<void*> unk168;
+    DynArray<void*> unk118;
+    DynArray<void*> unk128;
+    DynArray<void*> unk138;
+    DynArray<void*> unk148;
+    DynArray<void*> unk158;
+    DynArray<void*> unk168;
     int64_t unk178;
-    DynamicBuffer<void*> unk180;
+    DynArray<void*> unk180;
     int8_t unk190[256];
     int16_t unk290;
     int32_t unk294;

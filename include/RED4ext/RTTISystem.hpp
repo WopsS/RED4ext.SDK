@@ -63,8 +63,8 @@ struct CRTTISystem : IRTTISystem
     Unk425 unkC8;
     Unk425 unkF8;
     int64_t unk128;
-    DynamicBuffer<void*> unk130;
-    DynamicBuffer<void*> unk140;
+    DynArray<void*> unk130;
+    DynArray<void*> unk140;
     int64_t unk150;
     int64_t unk158;
     int64_t unk160;
@@ -73,8 +73,8 @@ struct CRTTISystem : IRTTISystem
     int32_t unk174;
     Unk425 unk178;
     int64_t unk1A8;
-    DynamicBuffer<void*> unk1B0;
-    DynamicBuffer<void*> unk1C0;
+    DynArray<void*> unk1B0;
+    DynArray<void*> unk1C0;
     CRITICAL_SECTION unk1D0;
     uint8_t unk1F8;
     CRITICAL_SECTION unk200;

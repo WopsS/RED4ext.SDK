@@ -6,7 +6,7 @@
 namespace RED4ext
 {
 template<typename T>
-struct DynamicBuffer
+struct DynArray
 {
     T operator[](uint32_t aIndex)
     {
@@ -18,7 +18,7 @@ struct DynamicBuffer
     uint32_t size;
 };
 
-RED4EXT_ASSERT_SIZE(DynamicBuffer<void*>, 0x10);
-RED4EXT_ASSERT_OFFSET(DynamicBuffer<void*>, capacity, 0x8);
-RED4EXT_ASSERT_OFFSET(DynamicBuffer<void*>, size, 0xC);
+RED4EXT_ASSERT_SIZE(DynArray<void*>, 0x10);
+RED4EXT_ASSERT_OFFSET(DynArray<void*>, capacity, 0x8);
+RED4EXT_ASSERT_OFFSET(DynArray<void*>, size, 0xC);
 } // namespace RED4ext
