@@ -7,6 +7,13 @@
 #include <RED4ext/Addresses.hpp>
 #include <RED4ext/REDfunc.hpp>
 
+RED4ext::IScriptable* RED4ext::CClass::AllocInstance()
+{
+    using func_t = IScriptable* (*)(CClass*, uint32_t, bool);
+    static REDfunc<func_t> func(Addresses::CClass_GetFunction);
+    return func(this, GetSize(), 0);
+}
+
 bool RED4ext::CClass::IsA(IRTTIType* aType)
 {
     if (this == aType)

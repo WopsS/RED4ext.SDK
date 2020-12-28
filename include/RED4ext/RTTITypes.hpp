@@ -3,6 +3,7 @@
 #include <RED4ext/CName.hpp>
 #include <RED4ext/CString.hpp>
 #include <RED4ext/DynArray.hpp>
+#include <RED4ext/IMemoryAllocator.hpp>
 #include <RED4ext/Scripting/Functions.hpp>
 #include <RED4ext/Scripting/IScriptable.hpp>
 #include <RED4ext/Unks.hpp>
@@ -35,12 +36,12 @@ struct IRTTIType
 
     virtual void GetName(CName& aOut) = 0;
     virtual uint32_t GetSize() = 0;
-    virtual void sub_18() = 0;
     virtual ERTTITypeType GetType() = 0;
+    virtual uint32_t GetAlignment() = 0;
     virtual void GetTypeName(CString& aOut) = 0;
-    virtual void sub_30() = 0;
-    virtual void Construct(void* aMemory) = 0;
-    virtual void Destruct(void* aMemory) = 0;
+    virtual void GetName2(CName& aOut) = 0;
+    virtual void Init(void* aMemory) = 0;
+    virtual void Destroy(void* aMemory) = 0;
     virtual void sub_48() = 0;
     virtual void sub_50() = 0;
     virtual void sub_58() = 0;
@@ -55,7 +56,7 @@ struct IRTTIType
     virtual void sub_A0() = 0;
     virtual void sub_A8() = 0;
     virtual void sub_B0() = 0;
-    virtual void sub_B8() = 0;
+    virtual IMemoryAllocator* GetAllocator() = 0;
 };
 
 RED4EXT_ASSERT_SIZE(IRTTIType, 0x8);
@@ -192,16 +193,18 @@ struct CClass : CRTTIType
     virtual void sub_C0() = 0;
     virtual void sub_C8() = 0;
     virtual void sub_D0() = 0;
-    virtual void ConstructClass(IScriptable* aMemory) = 0;
-    virtual void DestroyClass(IScriptable* aMemory) = 0;
+    virtual void InitCls(IScriptable* aMemory) = 0;
+    virtual void DestroyCls(IScriptable* aMemory) = 0;
     virtual void sub_E8() = 0;
+
+    IScriptable* AllocInstance();
 
     bool IsA(IRTTIType* aType);
     CClassFunction* GetFunction(CName aName);
 
     CClass* parent;
     CName name;
-    int64_t unk20;
+    CName name2;
     DynArray<void*> unk28;
     DynArray<void*> unk38;
     DynArray<CBaseFunction*> funcs;
@@ -209,7 +212,7 @@ struct CClass : CRTTIType
     uint32_t size; // The size of the real class that can be constructed.
     int32_t unk6C;
     uint32_t flags;
-    int32_t unk74;
+    uint32_t alignment;
     int64_t unk78;
     int64_t unk80;
     int64_t unk88;
