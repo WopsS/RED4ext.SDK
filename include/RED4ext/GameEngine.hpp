@@ -56,9 +56,9 @@ struct CBaseEngine
     virtual void sub_F8() = 0;
     virtual void sub_100() = 0;
 
-    int8_t unk8[0xC0];
+    int8_t unk8[0xB8];
     UnkC0* unkC0;
-    int8_t unkC8[0x150];
+    int8_t unkC8[0x158];
 };
 
 RED4EXT_ASSERT_SIZE(CBaseEngine, 0x220);
