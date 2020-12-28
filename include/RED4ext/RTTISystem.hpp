@@ -31,7 +31,7 @@ struct IRTTISystem
     virtual bool RegisterType(IRTTIType* aType, uint32_t aAsyncId) = 0;
     virtual void sub_88() = 0;
     virtual void sub_90() = 0;
-    virtual void sub_98() = 0;
+    virtual void RegisterFunction(CGlobalFunction* aFunc) = 0;
     virtual void sub_A0() = 0;
     virtual void sub_A8() = 0;
     virtual void sub_B0() = 0;

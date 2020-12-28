@@ -78,8 +78,8 @@ struct CClass : CRTTIType
     int64_t unk20;
     DynamicBuffer<void*> unk28;
     DynamicBuffer<void*> unk38;
-    DynamicBuffer<void*> funcs48;
-    DynamicBuffer<void*> funcs58;
+    DynamicBuffer<CBaseFunction*> funcs;
+    DynamicBuffer<CBaseFunction*> staticFuncs;
     int32_t unk68;
     int32_t unk6C;
     int32_t unk70;
@@ -114,8 +114,8 @@ struct CClass : CRTTIType
 RED4EXT_ASSERT_SIZE(CClass, 0x2A0);
 RED4EXT_ASSERT_OFFSET(CClass, parent, 0x10);
 RED4EXT_ASSERT_OFFSET(CClass, name, 0x18);
-RED4EXT_ASSERT_OFFSET(CClass, funcs48, 0x48);
-RED4EXT_ASSERT_OFFSET(CClass, funcs58, 0x58);
+RED4EXT_ASSERT_OFFSET(CClass, funcs, 0x48);
+RED4EXT_ASSERT_OFFSET(CClass, staticFuncs, 0x58);
 } // namespace RED4ext
 
 #ifdef RED4EXT_HEADER_ONLY
