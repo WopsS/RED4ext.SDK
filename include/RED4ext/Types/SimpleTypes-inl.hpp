@@ -5,6 +5,7 @@
 #endif
 
 #include <RED4ext/REDhash.hpp>
+#include <RED4ext/RTTITypes.hpp>
 
 RED4EXT_INLINE RED4ext::TweakDBID::TweakDBID(uint64_t aValue) noexcept
     : value(aValue)
@@ -99,4 +100,15 @@ RED4EXT_INLINE bool RED4ext::TweakDBID::operator==(const TweakDBID& aDBID) const
 RED4EXT_INLINE bool RED4ext::TweakDBID::operator!=(const TweakDBID& aDBID) const noexcept
 {
     return !(aDBID == *this);
+}
+
+RED4EXT_INLINE RED4ext::Variant::Variant(IRTTIType* aType, ScriptInstance aValue)
+    : type(reinterpret_cast<uint64_t>(aType))
+    , instance(aValue)
+{
+    if (aType->GetSize() <= 16 && aType->GetAlignment() <= 8)
+    {
+        memcpy(inlinedBuf, instance, aType->GetSize());
+        type |= 1;
+    }
 }

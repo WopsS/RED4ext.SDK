@@ -96,26 +96,24 @@ RED4EXT_ASSERT_SIZE(EditorObjectID, 0x20);
 struct Variant
 {
     Variant() = default;
+    
+    Variant(IRTTIType* aType, ScriptInstance aValue);
 
-    Variant(uint64_t aType, uint64_t aValue)
-        : type(aType)
-        , value(aValue)
-        , unknown(0)
+    uint64_t type { 0 }; // 00
+    union                
     {
-    }
-
-    Variant(IRTTIType* aType, ScriptInstance aValue)
-        : type(reinterpret_cast<std::uintptr_t>(aType))
-        , value(reinterpret_cast<std::uintptr_t>(aValue))
-        , unknown(0)
-    {
-    }
-
-    int64_t type;  // 00
-    int64_t value; // 08
-    int64_t unknown; // 10
+        struct
+        {
+            ScriptInstance instance; // 08
+            uint64_t       unknown;  // 10
+        };
+        char inlinedBuf[16]; // 08
+    };  
 };
 RED4EXT_ASSERT_SIZE(Variant, 0x18);
+RED4EXT_ASSERT_OFFSET(Variant, instance, 0x08);
+RED4EXT_ASSERT_OFFSET(Variant, unknown, 0x10);
+RED4EXT_ASSERT_OFFSET(Variant, inlinedBuf, 0x08);
 
 struct DataBuffer
 {
