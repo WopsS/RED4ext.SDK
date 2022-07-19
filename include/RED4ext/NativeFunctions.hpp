@@ -2,9 +2,19 @@
 #include <RED4ext/TweakDB.hpp>
 using namespace RED4ext;
 
+/// @pattern 40 55 48 81 EC ? ? ? ? 48 8D 6C 24 ? 8B 81 ? ? ? ?
+using CBaseFunction_ExecuteScripted = bool (CBaseFunction*, CStack*, void*);
+
 /// @pattern 48 89 5C 24 ? 57 48 81 EC ? ? ? ? 48 8B 02
 /// @nth 1/9
-using CBaseFunction_Execute = bool (CBaseFunction* self, CStack* aStack);
+using CBaseFunction_ExecuteNative = bool (CBaseFunction*, CStack*);
+
+/// @pattern 48 89 5C 24 08 57 48 83 EC 20 49 8B C1 4D 8B D0 44 8B 4C 24 58 48 8B DA 41 83 C9 01
+using CBaseFunction_Register = bool (CBaseFunction* self, CStack* aStack);
+
+/// @pattern 48 89 5C 24 08 48 89 74 24 10 57 48 83 EC ? 48 8B D9
+/// @nth 16/558
+using CBaseRTTIType_sub_80 = bool (CBaseFunction* self, CStack* aStack);
 
 /// @pattern 48 89 5C 24 08 57 48 83 EC 20 49 8B D9
 /// @nth 0/6
@@ -19,8 +29,8 @@ using CStack_ctor = CStack* (CStack*, ScriptInstance, CStackType*, uint32_t, CSt
 using DynArray_Realloc = void (DynArray<void*> * aThis, uint32_t aCapacity, uint32_t aElementSize, uint32_t aAlignment,
                                void (*a5)(int64_t, int64_t, int64_t, int64_t));
 
-/// @pattern 40 53 48 83 EC 20 33 C0 C6 01 00
-/// @nth 2/4
+/// @pattern 48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 33 FF
+/// @nth 0/19
 using CString_ctor = CString* (CString*, const char*);
 
 /// @pattern 48 89 5C 24 08 ? 89 ? 24 18 57 48 83 EC 30 8B C2
