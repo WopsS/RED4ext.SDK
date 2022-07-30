@@ -329,6 +329,49 @@ struct HashMap
         nodeList = newNodeList;
     }
 
+    
+#pragma region Iterator
+    Node* Begin()
+    {
+        return nodeList.nodes;
+    }
+
+    const Node* Begin() const
+    {
+        return nodeList.nodes;
+    }
+
+    Node* begin()
+    {
+        return Begin();
+    }
+
+    const Node* begin() const
+    {
+        return Begin();
+    }
+
+    Node* End()
+    {
+        return nodeList.nodes + nodeList.size;
+    }
+
+    const Node* End() const
+    {
+        return nodeList.nodes + nodeList.size;
+    }
+
+    Node* end()
+    {
+        return End();
+    }
+
+    const Node* end() const
+    {
+        return End();
+    }
+#pragma endregion
+
     Memory::IAllocator* GetAllocator()
     {
         return reinterpret_cast<Memory::IAllocator*>(&allocator);
