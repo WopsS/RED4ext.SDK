@@ -7,6 +7,7 @@
 
 #include <RED4ext/Addresses.hpp>
 #include <RED4ext/Common.hpp>
+#include <RED4ext/Iterators/DynArray.hpp>
 #include <RED4ext/Relocation.hpp>
 
 namespace RED4ext
@@ -19,6 +20,19 @@ struct IAllocator;
 template<typename T>
 struct DynArray
 {
+    using ValueType = T;
+    using Pointer = T*;
+    using ConstPointer = const T*;
+    using Reference = T&;
+    using ConstReference = const T&;
+    using SizeType = std::uint32_t;
+    using DifferenceType = std::ptrdiff_t;
+
+    using Iterator = Iterators::DynArray<DynArray<T>>;
+    using ConstIterator = Iterators::ConstDynArray<DynArray<T>>;
+    using ReverseIterator = std::reverse_iterator<Iterator>;
+    using ConstReverseIterator = std::reverse_iterator<ConstIterator>;
+
     DynArray(Memory::IAllocator* aAllocator = nullptr)
         : entries(aAllocator ? *reinterpret_cast<T**>(aAllocator) : nullptr)
         , size(0)
@@ -53,7 +67,7 @@ struct DynArray
     }
 
     template<class... TArgs>
-    void Emplace(T* aPosition, TArgs&&... aArgs)
+    void Emplace(ConstIterator aPosition, TArgs&&... aArgs)
     {
         uint32_t posIdx = static_cast<uint32_t>(aPosition - begin());
         uint32_t newSize = size + 1;
@@ -133,42 +147,42 @@ struct DynArray
     }
 
 #pragma region Iterator
-    T* Begin()
+    [[nodiscard]] constexpr Iterator Begin() noexcept
     {
-        return entries;
+        return Iterator(entries, this);
     }
 
-    const T* Begin() const
+    [[nodiscard]] constexpr ConstIterator Begin() const noexcept
     {
-        return entries;
+        return ConstIterator(entries, this);
     }
 
-    T* begin()
-    {
-        return Begin();
-    }
-
-    const T* begin() const
+    [[nodiscard]] constexpr Iterator begin() noexcept
     {
         return Begin();
     }
 
-    T* End()
+    [[nodiscard]] constexpr ConstIterator begin() const noexcept
     {
-        return entries + size;
+        return Begin();
     }
 
-    const T* End() const
+    [[nodiscard]] constexpr Iterator End() noexcept
     {
-        return entries + size;
+        return Iterator(entries + size, this);
     }
 
-    T* end()
+    [[nodiscard]] constexpr ConstIterator End() const noexcept
+    {
+        return ConstIterator(entries + size, this);
+    }
+
+    [[nodiscard]] constexpr Iterator end() noexcept
     {
         return End();
     }
 
-    const T* end() const
+    [[nodiscard]] constexpr ConstIterator end() const noexcept
     {
         return End();
     }
@@ -208,13 +222,13 @@ private:
 
     uint32_t CalculateGrowth(uint32_t aNewSize)
     {
-        uint32_t geometric = capacity + (capacity / 2);
-        if (geometric < aNewSize)
+        uint32_t growth = capacity + (capacity / 2);
+        if (growth < aNewSize)
         {
             return aNewSize;
         }
 
-        return geometric;
+        return growth;
     }
 };
 RED4EXT_ASSERT_SIZE(DynArray<void*>, 0x10);

@@ -116,7 +116,7 @@ struct Map
         if (valuePtr == nullptr)
             return false;
 
-        uint32_t index = static_cast<uint32_t>(valuePtr - values.begin());
+        uint32_t index = static_cast<uint32_t>(valuePtr - &values[0]);
         return RemoveAt(index);
     }
 
@@ -176,7 +176,7 @@ struct Map
     int32_t flags;      // 20
 
 private:
-    const K* LowerBound(const K& aKey) const
+    auto LowerBound(const K& aKey) const
     {
         if ((flags & (int32_t)Flags::NotSorted) == (int32_t)Flags::NotSorted)
         {
