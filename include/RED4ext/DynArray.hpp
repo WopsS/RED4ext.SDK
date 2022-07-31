@@ -40,12 +40,12 @@ struct DynArray
     {
     }
 
-    const T& operator[](uint32_t aIndex) const
+    const T& operator[](SizeType aIndex) const
     {
         return entries[aIndex];
     }
 
-    T& operator[](uint32_t aIndex)
+    T& operator[](SizeType aIndex)
     {
         return entries[aIndex];
     }
@@ -100,7 +100,7 @@ struct DynArray
         return false;
     }
 
-    bool RemoveAt(uint32_t aIndex)
+    bool RemoveAt(SizeType aIndex)
     {
         if (aIndex >= size)
             return false;
@@ -108,7 +108,7 @@ struct DynArray
         entries[aIndex].~T();
         if ((aIndex + 1) != size) // If not at the end
         {
-            uint32_t entriesCount = size - (aIndex + 1);
+            SizeType entriesCount = size - (aIndex + 1);
             MoveEntries(&entries[aIndex + 1], &entries[aIndex], entriesCount);
         }
         --size;
@@ -117,7 +117,7 @@ struct DynArray
 
     void Clear()
     {
-        for (uint32_t i = 0; i != size; ++i)
+        for (SizeType i = 0; i != size; ++i)
         {
             entries[i].~T();
         }
@@ -125,7 +125,7 @@ struct DynArray
         size = 0;
     }
 
-    void Reserve(uint32_t aCount)
+    void Reserve(SizeType aCount)
     {
         // Alignment seems to always be 8.
         constexpr uint32_t alignment = 8;
@@ -146,17 +146,27 @@ struct DynArray
             return reinterpret_cast<Memory::IAllocator*>(&entries[capacity]);
     }
 
-#pragma region Iterator
     [[nodiscard]] constexpr Iterator Begin() noexcept
     {
-        return Iterator(entries, this);
+        return Iterator(entries);
     }
 
     [[nodiscard]] constexpr ConstIterator Begin() const noexcept
     {
-        return ConstIterator(entries, this);
+        return ConstIterator(entries);
     }
 
+    [[nodiscard]] constexpr Iterator End() noexcept
+    {
+        return Iterator(entries + size);
+    }
+
+    [[nodiscard]] constexpr ConstIterator End() const noexcept
+    {
+        return ConstIterator(entries + size);
+    }
+
+#pragma region STL
     [[nodiscard]] constexpr Iterator begin() noexcept
     {
         return Begin();
@@ -165,16 +175,6 @@ struct DynArray
     [[nodiscard]] constexpr ConstIterator begin() const noexcept
     {
         return Begin();
-    }
-
-    [[nodiscard]] constexpr Iterator End() noexcept
-    {
-        return Iterator(entries + size, this);
-    }
-
-    [[nodiscard]] constexpr ConstIterator End() const noexcept
-    {
-        return ConstIterator(entries + size, this);
     }
 
     [[nodiscard]] constexpr Iterator end() noexcept
@@ -193,7 +193,7 @@ struct DynArray
     uint32_t size;     // 0C
 
 private:
-    void MoveEntries(T* aSrc, T* aDst, uint32_t aCount)
+    void MoveEntries(T* aSrc, T* aDst, SizeType aCount)
     {
         if (aCount == 0 || aSrc == aDst)
             return;
@@ -220,9 +220,9 @@ private:
         }
     }
 
-    uint32_t CalculateGrowth(uint32_t aNewSize)
+    SizeType CalculateGrowth(SizeType aNewSize)
     {
-        uint32_t growth = capacity + (capacity / 2);
+        SizeType growth = capacity + (capacity / 2);
         if (growth < aNewSize)
         {
             return aNewSize;
