@@ -2,10 +2,10 @@
 
 #include <iterator>
 
-namespace RED4ext::Iterators
+namespace RED4ext
 {
 template<typename TContainer>
-class ConstDynArray
+class DynArrayConstIter
 {
 public:
     using iterator_concept = std::contiguous_iterator_tag;
@@ -17,18 +17,18 @@ public:
 
     using Elements_t = typename TContainer::Pointer;
 
-    constexpr ConstDynArray(Elements_t aElements = nullptr) noexcept
+    constexpr DynArrayConstIter(Elements_t aElements = nullptr) noexcept
         : m_elements(aElements)
     {
     }
 
-    constexpr ConstDynArray(const ConstDynArray&) noexcept = default;
-    constexpr ConstDynArray(ConstDynArray&&) noexcept = default;
+    constexpr DynArrayConstIter(const DynArrayConstIter&) noexcept = default;
+    constexpr DynArrayConstIter(DynArrayConstIter&&) noexcept = default;
 
-    constexpr ConstDynArray& operator=(const ConstDynArray&) noexcept = default;
-    constexpr ConstDynArray& operator=(ConstDynArray&&) noexcept = default;
+    constexpr DynArrayConstIter& operator=(const DynArrayConstIter&) noexcept = default;
+    constexpr DynArrayConstIter& operator=(DynArrayConstIter&&) noexcept = default;
 
-    constexpr ~ConstDynArray() noexcept = default;
+    constexpr ~DynArrayConstIter() noexcept = default;
 
     [[nodiscard]] constexpr reference operator*() const noexcept
     {
@@ -45,92 +45,92 @@ public:
         return *(*this + aOffset);
     }
 
-    [[nodiscard]] constexpr ConstDynArray operator+(const difference_type aOffset) const noexcept
+    [[nodiscard]] constexpr DynArrayConstIter operator+(const difference_type aOffset) const noexcept
     {
-        ConstDynArray tmp = *this;
+        DynArrayConstIter tmp = *this;
         tmp += aOffset;
 
         return tmp;
     }
 
-    [[nodiscard]] constexpr ConstDynArray operator-(const difference_type aOffset) const noexcept
+    [[nodiscard]] constexpr DynArrayConstIter operator-(const difference_type aOffset) const noexcept
     {
-        ConstDynArray tmp = *this;
+        DynArrayConstIter tmp = *this;
         tmp -= aOffset;
 
         return tmp;
     }
 
-    [[nodiscard]] constexpr difference_type operator-(const ConstDynArray& aRhs) const noexcept
+    [[nodiscard]] constexpr difference_type operator-(const DynArrayConstIter& aRhs) const noexcept
     {
         return m_elements - aRhs.m_elements;
     }
 
-    constexpr ConstDynArray& operator++() noexcept
+    constexpr DynArrayConstIter& operator++() noexcept
     {
         ++m_elements;
         return *this;
     }
 
-    constexpr ConstDynArray operator++(int) noexcept
+    constexpr DynArrayConstIter operator++(int) noexcept
     {
-        ConstDynArray tmp = *this;
+        DynArrayConstIter tmp = *this;
         ++(*this);
 
         return tmp;
     }
 
-    constexpr ConstDynArray& operator--() noexcept
+    constexpr DynArrayConstIter& operator--() noexcept
     {
         --m_elements;
         return *this;
     }
 
-    constexpr ConstDynArray operator--(int) noexcept
+    constexpr DynArrayConstIter operator--(int) noexcept
     {
-        ConstDynArray tmp = *this;
+        DynArrayConstIter tmp = *this;
         --(*this);
 
         return tmp;
     }
 
-    constexpr ConstDynArray& operator+=(const difference_type aOffset) noexcept
+    constexpr DynArrayConstIter& operator+=(const difference_type aOffset) noexcept
     {
         m_elements += aOffset;
         return *this;
     }
 
-    constexpr ConstDynArray& operator-=(const difference_type aOffset) noexcept
+    constexpr DynArrayConstIter& operator-=(const difference_type aOffset) noexcept
     {
         return *this += -aOffset;
     }
 
-    [[nodiscard]] constexpr bool operator==(const ConstDynArray& aRhs) const noexcept
+    [[nodiscard]] constexpr bool operator==(const DynArrayConstIter& aRhs) const noexcept
     {
         return m_elements == aRhs.m_elements;
     }
 
-    [[nodiscard]] bool operator!=(const ConstDynArray& aRhs) const noexcept
+    [[nodiscard]] bool operator!=(const DynArrayConstIter& aRhs) const noexcept
     {
         return !(*this == aRhs);
     }
 
-    [[nodiscard]] bool operator<(const ConstDynArray& aRhs) const noexcept
+    [[nodiscard]] bool operator<(const DynArrayConstIter& aRhs) const noexcept
     {
         return m_elements < aRhs.m_elements;
     }
 
-    [[nodiscard]] bool operator>(const ConstDynArray& aRhs) const noexcept
+    [[nodiscard]] bool operator>(const DynArrayConstIter& aRhs) const noexcept
     {
         return aRhs < *this;
     }
 
-    [[nodiscard]] bool operator<=(const ConstDynArray& aRhs) const noexcept
+    [[nodiscard]] bool operator<=(const DynArrayConstIter& aRhs) const noexcept
     {
         return !(aRhs < *this);
     }
 
-    [[nodiscard]] bool operator>=(const ConstDynArray& aRhs) const noexcept
+    [[nodiscard]] bool operator>=(const DynArrayConstIter& aRhs) const noexcept
     {
         return !(*this < aRhs);
     }
@@ -140,10 +140,10 @@ private:
 };
 
 template<typename TContainer>
-class DynArray : public ConstDynArray<TContainer>
+class DynArrayIter : public DynArrayConstIter<TContainer>
 {
 public:
-    using Base_t = ConstDynArray<TContainer>;
+    using Base_t = DynArrayConstIter<TContainer>;
 
     using iterator_concept = std::contiguous_iterator_tag;
     using iterator_category = std::contiguous_iterator_tag;
@@ -152,15 +152,15 @@ public:
     using pointer = typename TContainer::Pointer;
     using reference = typename TContainer::Reference;
 
-    using Base_t::ConstDynArray;
+    using Base_t::DynArrayConstIter;
 
-    constexpr DynArray(const DynArray&) noexcept = default;
-    constexpr DynArray(DynArray&&) noexcept = default;
+    constexpr DynArrayIter(const DynArrayIter&) noexcept = default;
+    constexpr DynArrayIter(DynArrayIter&&) noexcept = default;
 
-    constexpr DynArray& operator=(const DynArray&) noexcept = default;
-    constexpr DynArray& operator=(DynArray&&) noexcept = default;
+    constexpr DynArrayIter& operator=(const DynArrayIter&) noexcept = default;
+    constexpr DynArrayIter& operator=(DynArrayIter&&) noexcept = default;
 
-    constexpr ~DynArray() noexcept = default;
+    constexpr ~DynArrayIter() noexcept = default;
 
     using Base_t::operator-;
 
@@ -179,57 +179,57 @@ public:
         return const_cast<reference>(Base_t::operator[](aOffset));
     }
 
-    [[nodiscard]] constexpr DynArray operator+(const difference_type aOffset) const noexcept
+    [[nodiscard]] constexpr DynArrayIter operator+(const difference_type aOffset) const noexcept
     {
-        DynArray tmp = *this;
+        DynArrayIter tmp = *this;
         tmp += aOffset;
 
         return tmp;
     }
 
-    [[nodiscard]] constexpr DynArray operator-(const difference_type aOffset) const noexcept
+    [[nodiscard]] constexpr DynArrayIter operator-(const difference_type aOffset) const noexcept
     {
-        DynArray tmp = *this;
+        DynArrayIter tmp = *this;
         tmp -= aOffset;
 
         return tmp;
     }
 
-    constexpr DynArray& operator++() noexcept
+    constexpr DynArrayIter& operator++() noexcept
     {
         Base_t::operator++();
         return *this;
     }
 
-    constexpr DynArray operator++(int) noexcept
+    constexpr DynArrayIter operator++(int) noexcept
     {
-        DynArray tmp = *this;
+        DynArrayIter tmp = *this;
         Base_t::operator++();
 
         return tmp;
     }
 
-    constexpr DynArray& operator--() noexcept
+    constexpr DynArrayIter& operator--() noexcept
     {
         Base_t::operator--();
         return *this;
     }
 
-    constexpr DynArray operator--(int) noexcept
+    constexpr DynArrayIter operator--(int) noexcept
     {
-        DynArray tmp = *this;
+        DynArrayIter tmp = *this;
         Base_t::operator--();
 
         return tmp;
     }
 
-    constexpr DynArray& operator+=(const difference_type aOffset) noexcept
+    constexpr DynArrayIter& operator+=(const difference_type aOffset) noexcept
     {
         Base_t::operator+=(aOffset);
         return *this;
     }
 
-    constexpr DynArray& operator-=(const difference_type aOffset) noexcept
+    constexpr DynArrayIter& operator-=(const difference_type aOffset) noexcept
     {
         Base_t::operator-=(aOffset);
         return *this;

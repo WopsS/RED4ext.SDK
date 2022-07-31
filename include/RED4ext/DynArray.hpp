@@ -7,7 +7,7 @@
 
 #include <RED4ext/Addresses.hpp>
 #include <RED4ext/Common.hpp>
-#include <RED4ext/Iterators/DynArray.hpp>
+#include <RED4ext/Iterators/DynArrayIters.hpp>
 #include <RED4ext/Relocation.hpp>
 
 namespace RED4ext
@@ -28,8 +28,8 @@ struct DynArray
     using SizeType = std::uint32_t;
     using DifferenceType = std::ptrdiff_t;
 
-    using Iterator = Iterators::DynArray<DynArray<T>>;
-    using ConstIterator = Iterators::ConstDynArray<DynArray<T>>;
+    using Iterator = DynArrayIter<DynArray<T>>;
+    using ConstIterator = DynArrayConstIter<DynArray<T>>;
     using ReverseIterator = std::reverse_iterator<Iterator>;
     using ConstReverseIterator = std::reverse_iterator<ConstIterator>;
 
