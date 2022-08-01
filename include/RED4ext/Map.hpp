@@ -3,9 +3,10 @@
 #include <algorithm>
 #include <cstdint>
 #include <functional>
+#include <utility>
 
 #include <RED4ext/Common.hpp>
-#include <RED4ext/DynArray.hpp>
+#include <RED4ext/Iterators/MapIters.hpp>
 #include <RED4ext/Relocation.hpp>
 
 namespace RED4ext
@@ -18,6 +19,19 @@ struct IMemory;
 template<typename K, typename T, class Compare = std::less<K>>
 struct Map
 {
+    using KeyType = K;
+    using MappedType = T;
+    using ValueType = std::pair<const KeyType, MappedType>;
+
+    using DifferenceType = std::ptrdiff_t;
+    using Pointer = ValueType*;
+    using ConstPointer = const Pointer;
+    using Reference = ValueType&;
+    using ConstReference = const Reference;
+
+    using Iterator = MapIter<Map<K, T, Compare>>;
+    using ConstIterator = MapConstIter<Map<K, T, Compare>>;
+
     enum class Flags : int32_t
     {
         NotSorted = 1 << 0
@@ -170,6 +184,38 @@ struct Map
         keys.Reserve(aCount);
         values.Reserve(aCount);
     }
+
+#pragma region STL
+    [[nodiscard]] constexpr Iterator begin() noexcept
+    {
+        return {keys.begin(), values.begin()};
+    }
+
+    [[nodiscard]] constexpr ConstIterator begin() const noexcept
+    {
+        return {keys.begin(), values.begin()};
+    }
+
+    [[nodiscard]] constexpr Iterator end() noexcept
+    {
+        return {keys.end(), values.end()};
+    }
+
+    [[nodiscard]] constexpr ConstIterator end() const noexcept
+    {
+        return {keys.end(), values.end()};
+    }
+
+    [[nodiscard]] constexpr ConstIterator cbegin() const noexcept
+    {
+        return begin();
+    }
+
+    [[nodiscard]] constexpr ConstIterator cend() const noexcept
+    {
+        return end();
+    }
+#pragma endregion
 
     DynArray<K> keys;   // 00
     DynArray<T> values; // 10
