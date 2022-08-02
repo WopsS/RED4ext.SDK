@@ -15,9 +15,9 @@ public:
     using pointer = typename TContainer::ConstPointer;
     using reference = typename TContainer::ConstReference;
 
-    using Elements_t = typename TContainer::Pointer;
+    using ElementsType = typename TContainer::Pointer;
 
-    constexpr DynArrayConstIter(Elements_t aElements = nullptr) noexcept
+    constexpr DynArrayConstIter(ElementsType aElements = nullptr) noexcept
         : m_elements(aElements)
     {
     }
@@ -110,40 +110,21 @@ public:
         return m_elements == aRhs.m_elements;
     }
 
-    [[nodiscard]] bool operator!=(const DynArrayConstIter& aRhs) const noexcept
+    [[nodiscard]] constexpr std::strong_ordering operator<=>(const DynArrayConstIter& aRhs) const noexcept
     {
-        return !(*this == aRhs);
-    }
-
-    [[nodiscard]] bool operator<(const DynArrayConstIter& aRhs) const noexcept
-    {
-        return m_elements < aRhs.m_elements;
-    }
-
-    [[nodiscard]] bool operator>(const DynArrayConstIter& aRhs) const noexcept
-    {
-        return aRhs < *this;
-    }
-
-    [[nodiscard]] bool operator<=(const DynArrayConstIter& aRhs) const noexcept
-    {
-        return !(aRhs < *this);
-    }
-
-    [[nodiscard]] bool operator>=(const DynArrayConstIter& aRhs) const noexcept
-    {
-        return !(*this < aRhs);
+        // TODO: _Unfancy
+        return m_elements <=> aRhs.m_elements;
     }
 
 private:
-    Elements_t m_elements;
+    ElementsType m_elements;
 };
 
 template<typename TContainer>
 class DynArrayIter : public DynArrayConstIter<TContainer>
 {
 public:
-    using Base_t = DynArrayConstIter<TContainer>;
+    using BaseType = DynArrayConstIter<TContainer>;
 
     using iterator_concept = std::contiguous_iterator_tag;
     using iterator_category = std::contiguous_iterator_tag;
@@ -152,7 +133,7 @@ public:
     using pointer = typename TContainer::Pointer;
     using reference = typename TContainer::Reference;
 
-    using Base_t::DynArrayConstIter;
+    using BaseType::DynArrayConstIter;
 
     constexpr DynArrayIter(const DynArrayIter&) noexcept = default;
     constexpr DynArrayIter(DynArrayIter&&) noexcept = default;
@@ -162,21 +143,21 @@ public:
 
     constexpr ~DynArrayIter() noexcept = default;
 
-    using Base_t::operator-;
+    using BaseType::operator-;
 
     [[nodiscard]] constexpr reference operator*() const noexcept
     {
-        return const_cast<reference>(Base_t::operator*());
+        return const_cast<reference>(BaseType::operator*());
     }
 
     [[nodiscard]] constexpr pointer operator->() const noexcept
     {
-        return const_cast<pointer>(Base_t::operator->());
+        return const_cast<pointer>(BaseType::operator->());
     }
 
     [[nodiscard]] constexpr reference operator[](const difference_type aOffset) const noexcept
     {
-        return const_cast<reference>(Base_t::operator[](aOffset));
+        return const_cast<reference>(BaseType::operator[](aOffset));
     }
 
     [[nodiscard]] constexpr DynArrayIter operator+(const difference_type aOffset) const noexcept
@@ -197,42 +178,42 @@ public:
 
     constexpr DynArrayIter& operator++() noexcept
     {
-        Base_t::operator++();
+        BaseType::operator++();
         return *this;
     }
 
     constexpr DynArrayIter operator++(int) noexcept
     {
         DynArrayIter tmp = *this;
-        Base_t::operator++();
+        BaseType::operator++();
 
         return tmp;
     }
 
     constexpr DynArrayIter& operator--() noexcept
     {
-        Base_t::operator--();
+        BaseType::operator--();
         return *this;
     }
 
     constexpr DynArrayIter operator--(int) noexcept
     {
         DynArrayIter tmp = *this;
-        Base_t::operator--();
+        BaseType::operator--();
 
         return tmp;
     }
 
     constexpr DynArrayIter& operator+=(const difference_type aOffset) noexcept
     {
-        Base_t::operator+=(aOffset);
+        BaseType::operator+=(aOffset);
         return *this;
     }
 
     constexpr DynArrayIter& operator-=(const difference_type aOffset) noexcept
     {
-        Base_t::operator-=(aOffset);
+        BaseType::operator-=(aOffset);
         return *this;
     }
 };
-} // namespace RED4ext::Iterators
+} // namespace RED4ext
