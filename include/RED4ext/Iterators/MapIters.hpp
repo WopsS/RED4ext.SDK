@@ -12,12 +12,12 @@ template<typename TContainer>
 class MapConstIter
 {
 public:
-    using iterator_concept = std::bidirectional_iterator_tag;
-    using iterator_category = std::bidirectional_iterator_tag;
+    using iterator_concept = std::input_iterator_tag;
+    using iterator_category = std::input_iterator_tag;
     using value_type = typename TContainer::ValueType;
-    using difference_type = typename TContainer::DifferenceType;
-    using pointer = typename TContainer::ConstPointer;
     using reference = typename TContainer::ConstReference;
+    using pointer = typename TContainer::ConstPointer;
+    using difference_type = typename TContainer::DifferenceType;
 
     using KeyType = typename DynArray<typename TContainer::KeyType>::Iterator;
     using MappedType = typename DynArray<typename TContainer::MappedType>::Iterator;
@@ -75,6 +75,35 @@ class MapIter : MapConstIter<TContainer>
 public:
     using BaseType = MapConstIter<TContainer>;
 
+    using iterator_concept = std::input_iterator_tag;
+    using iterator_category = std::input_iterator_tag;
+    using value_type = typename TContainer::ValueType;
+    using reference = typename TContainer::Reference;
+    using pointer = typename TContainer::Pointer;
+    using difference_type = typename TContainer::DifferenceType;
+
     using BaseType::MapConstIter;
+
+    constexpr MapIter(const MapIter&) noexcept = default;
+    constexpr MapIter(MapIter&&) noexcept = default;
+    
+    constexpr MapIter& operator=(const MapIter&) noexcept = default;
+    constexpr MapIter& operator=(MapIter&&) noexcept = default;
+
+    constexpr ~MapIter() noexcept = default;
+
+    constexpr MapIter& operator++() noexcept
+    {
+        BaseType::operator++();
+        return *this;
+    }
+
+    constexpr MapIter& operator++(int) noexcept
+    {
+        MapIter tmp = *this;
+        BaseType::operator++();
+
+        return tmp;
+    }
 };
 } // namespace RED4ext

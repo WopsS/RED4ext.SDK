@@ -23,11 +23,11 @@ struct Map
     using MappedType = T;
     using ValueType = std::pair<const KeyType, MappedType>;
 
-    using DifferenceType = std::ptrdiff_t;
-    using Pointer = ValueType*;
-    using ConstPointer = const Pointer;
     using Reference = ValueType&;
-    using ConstReference = const Reference;
+    using ConstReference = const ValueType&;
+    using Pointer = ValueType*;
+    using ConstPointer = const ValueType*;
+    using DifferenceType = std::ptrdiff_t;
 
     using Iterator = MapIter<Map<K, T, Compare>>;
     using ConstIterator = MapConstIter<Map<K, T, Compare>>;
