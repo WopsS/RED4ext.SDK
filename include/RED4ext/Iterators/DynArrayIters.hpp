@@ -9,11 +9,11 @@ class DynArrayConstIter
 {
 public:
     using iterator_concept = std::contiguous_iterator_tag;
-    using iterator_category = std::contiguous_iterator_tag;
+    using iterator_category = std::random_access_iterator_tag;
     using value_type = typename TContainer::ValueType;
-    using difference_type = typename TContainer::DifferenceType;
-    using pointer = typename TContainer::ConstPointer;
     using reference = typename TContainer::ConstReference;
+    using pointer = typename TContainer::ConstPointer;
+    using difference_type = typename TContainer::DifferenceType;
 
     using ElementsType = typename TContainer::Pointer;
 
@@ -129,9 +129,9 @@ public:
     using iterator_concept = std::contiguous_iterator_tag;
     using iterator_category = std::contiguous_iterator_tag;
     using value_type = typename TContainer::ValueType;
-    using difference_type = typename TContainer::DifferenceType;
-    using pointer = typename TContainer::Pointer;
     using reference = typename TContainer::Reference;
+    using pointer = typename TContainer::Pointer;
+    using difference_type = typename TContainer::DifferenceType;
 
     using BaseType::DynArrayConstIter;
 
