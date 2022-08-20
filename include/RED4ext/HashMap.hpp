@@ -2,9 +2,11 @@
 
 #include <cstdint>
 #include <functional>
+#include <memory>
 
 #include <RED4ext/Common.hpp>
 #include <RED4ext/Hashing/FNV1a.hpp>
+#include <RED4ext/Iterators/HashMapIters.hpp>
 #include <RED4ext/Memory/Allocators.hpp>
 
 namespace RED4ext
@@ -49,14 +51,25 @@ struct HashMapHash<T, std::enable_if_t<std::is_pointer_v<T>>>
 template<typename K, typename T, typename Hasher = HashMapHash<K>>
 struct HashMap
 {
+    using ValueType = std::pair<const K, T>;
+    using Reference = ValueType&;
+    using ConstReference = const ValueType&;
+    using Pointer = ValueType*;
+    using ConstPointer = const ValueType*;
+    using DifferenceType = std::ptrdiff_t;
+
+    using Iterator = HashMapIter<HashMap<K, T, Hasher>>;
+    using ConstIterator = HashMapConstIter<HashMap<K, T, Hasher>>;
+    using ReverseIterator = std::reverse_iterator<Iterator>;
+    using ConstReverseIterator = std::reverse_iterator<ConstIterator>;
+
     static const uint32_t INVALID_INDEX = static_cast<uint32_t>(-1);
 
     struct Node
     {
         uint32_t next;      // 00
         uint32_t hashedKey; // 04
-        K key;              // 08
-        T value;            // 10
+        ValueType value;    // 08
     };
 
     struct NodeList
@@ -78,7 +91,7 @@ struct HashMap
 
         Node* GetNextAvailNode()
         {
-            if (nextIdx == -1)
+            if (nextIdx == INVALID_INDEX)
                 return nullptr;
 
             if (size == nextIdx)
@@ -91,7 +104,7 @@ struct HashMap
                 else
                 {
                     Node* node = &nodes[nextIdx];
-                    nextIdx = -1;
+                    nextIdx = INVALID_INDEX;
                     return node;
                 }
             }
@@ -129,7 +142,9 @@ struct HashMap
             while (idx != INVALID_INDEX)
             {
                 Node* node = &nodeList.nodes[idx];
-                aFunctor(node->key, node->value);
+                auto& value = node->value;
+
+                aFunctor(value.first, value.second);
                 idx = node->next;
             }
         }
@@ -145,9 +160,11 @@ struct HashMap
         while (idx != INVALID_INDEX)
         {
             Node* node = &nodeList.nodes[idx];
-            if (node->hashedKey == hashedKey && node->key == aKey)
+            auto& value = node->value;
+
+            if (node->hashedKey == hashedKey && value.first == aKey)
             {
-                return &node->value;
+                return &value.second;
             }
 
             idx = node->next;
@@ -170,7 +187,9 @@ struct HashMap
         {
             Node* prevNode = nullptr;
             Node* node = &nodeList.nodes[idx];
-            if (node->hashedKey == hashedKey && node->key == aKey)
+            const auto& value = node->value;
+
+            if (node->hashedKey == hashedKey && value.first == aKey)
             {
                 if (prevNode == nullptr)
                     indexTable[hashedKey % capacity] = node->next;
@@ -225,15 +244,17 @@ struct HashMap
     {
         uint32_t hashedKey = Hasher{}(aKey);
 
-        if (size != 0 && indexTable[hashedKey % capacity] != -1)
+        if (size != 0 && indexTable[hashedKey % capacity] != INVALID_INDEX)
         {
             uint32_t idx = indexTable[hashedKey % capacity];
             while (idx != INVALID_INDEX)
             {
                 Node* node = &nodeList.nodes[idx];
-                if (node->hashedKey == hashedKey && node->key == aKey)
+                auto& value = node->value;
+
+                if (node->hashedKey == hashedKey && value.first == aKey)
                 {
-                    return {&node->value, false};
+                    return {&value.second, false};
                 }
 
                 idx = node->next;
@@ -251,12 +272,14 @@ struct HashMap
         // shouldn't be null. The game doesn't even check
         Node* node = nodeList.GetNextAvailNode();
         node->hashedKey = hashedKey;
-        new (&node->key) K(aKey);
-        new (&node->value) T(std::forward<TArgs>(aArgs)...);
+
+        std::construct_at(std::addressof(node->value.first), aKey);
+        std::construct_at(std::addressof(node->value.second), std::forward<TArgs>(aArgs)...);
+
         node->next = indexTable[hashedKey % capacity];
         indexTable[hashedKey % capacity] = static_cast<uint32_t>(node - nodeList.nodes);
         ++size;
-        return {&node->value, true};
+        return {&node->value.second, true};
     }
 
     void Clear()
@@ -291,7 +314,7 @@ struct HashMap
 
         for (uint32_t i = 0; i != aSize; ++i)
         {
-            newIndexTable[i] = -1;
+            newIndexTable[i] = INVALID_INDEX;
         }
 
         if (capacity != 0)
@@ -308,8 +331,10 @@ struct HashMap
 
                         Node* node = newNodeList.GetNextAvailNode();
                         node->hashedKey = hashedKey;
-                        new (&node->key) K(std::move(oldNode->key));
-                        new (&node->value) T(std::move(oldNode->value));
+
+                        std::construct_at(std::addressof(node->value.first), oldNode->value.first);
+                        std::construct_at(std::addressof(node->value.second), std::move(oldNode->value.second));
+
                         node->next = newIndexTable[hashedKey % aSize];
                         newIndexTable[hashedKey % aSize] = static_cast<uint32_t>(node - newNodeList.nodes);
 
@@ -317,7 +342,7 @@ struct HashMap
                         oldNode->~Node();
                     }
 
-                    indexTable[i] = -1;
+                    indexTable[i] = INVALID_INDEX;
                 }
             }
 
@@ -334,6 +359,48 @@ struct HashMap
         return reinterpret_cast<Memory::IAllocator*>(&allocator);
     }
 
+    [[nodiscard]] constexpr Iterator Begin() noexcept
+    {
+        return Iterator(nodeList.nodes, {indexTable, indexTable + capacity});
+    }
+
+    [[nodiscard]] constexpr ConstIterator Begin() const noexcept
+    {
+        return ConstIterator(nodeList.nodes, {indexTable, indexTable + capacity});
+    }
+
+    [[nodiscard]] constexpr Iterator End() noexcept
+    {
+        return Iterator(nodeList.nodes, {indexTable + capacity, indexTable + capacity});
+    }
+
+    [[nodiscard]] constexpr ConstIterator End() const noexcept
+    {
+        return ConstIterator(nodeList.nodes, {indexTable + capacity, indexTable + capacity});
+    }
+
+#pragma region STL
+    [[nodiscard]] constexpr Iterator begin() noexcept
+    {
+        return Begin();
+    }
+
+    [[nodiscard]] constexpr ConstIterator begin() const noexcept
+    {
+        return Begin();
+    }
+
+    [[nodiscard]] constexpr Iterator end() noexcept
+    {
+        return End();
+    }
+
+    [[nodiscard]] constexpr ConstIterator end() const noexcept
+    {
+        return End();
+    }
+#pragma endregion
+
     uint32_t* indexTable; // 00
     uint32_t size;        // 08
     uint32_t capacity;    // 0C
@@ -341,4 +408,5 @@ struct HashMap
     uintptr_t allocator;  // 28
 };
 RED4EXT_ASSERT_SIZE(RED4EXT_ASSERT_ESCAPE(HashMap<uint64_t, void*>), 0x30);
+RED4EXT_ASSERT_SIZE(RED4EXT_ASSERT_ESCAPE(HashMap<uint64_t, void*>::Node), 0x8 + sizeof(uint64_t) + sizeof(void*));
 } // namespace RED4ext
