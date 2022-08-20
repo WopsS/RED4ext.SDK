@@ -30,7 +30,7 @@ public:
 
     [[nodiscard]] reference operator*() const noexcept
     {
-        assert(m_nodeIdx == TContainer::INVALID_INDEX);
+        assert(m_nodeIdx != TContainer::INVALID_INDEX);
 
         const NodeType& node = m_nodes[m_nodeIdx];
         return node.value;

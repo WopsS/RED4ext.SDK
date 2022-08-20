@@ -28,6 +28,11 @@ public:
     {
     }
 
+    // https://stackoverflow.com/questions/52856168/arrow-operator-operator-return-type-when-dereference-operator-returns-by
+    // c++ input iterator arrow operator
+    // https://stackoverflow.com/questions/19655941/create-iterator-to-c-container-that-returns-a-stdpair
+    // https://www.reedbeta.com/blog/ranges-compatible-containers/
+
     constexpr MapConstIter(const MapConstIter&) noexcept = default;
     constexpr MapConstIter(MapConstIter&&) noexcept = default;
 
