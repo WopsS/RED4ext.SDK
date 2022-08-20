@@ -5,9 +5,9 @@
 #include <RED4ext/CName.hpp>
 #include <RED4ext/CString.hpp>
 #include <RED4ext/Common.hpp>
-#include <RED4ext/DynArray.hpp>
+#include <RED4ext/Containers/DynArray.hpp>
 #include <RED4ext/Handle.hpp>
-#include <RED4ext/HashMap.hpp>
+#include <RED4ext/Containers/HashMap.hpp>
 #include <RED4ext/Scripting/IScriptable.hpp>
 
 namespace RED4ext

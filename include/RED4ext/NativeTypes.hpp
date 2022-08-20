@@ -7,7 +7,7 @@
 #include <RED4ext/CName.hpp>
 #include <RED4ext/CString.hpp>
 #include <RED4ext/Common.hpp>
-#include <RED4ext/HashMap.hpp>
+#include <RED4ext/Containers/HashMap.hpp>
 #include <RED4ext/InstanceType.hpp>
 #include <RED4ext/ResourceReference.hpp>
 #include <RED4ext/Unks.hpp>

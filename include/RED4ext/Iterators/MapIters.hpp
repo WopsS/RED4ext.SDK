@@ -4,7 +4,7 @@
 #include <iterator>
 #include <utility>
 
-#include <RED4ext/DynArray.hpp>
+#include <RED4ext/Containers/DynArray.hpp>
 
 namespace RED4ext
 {

@@ -4,16 +4,16 @@
 #include <shared_mutex>
 
 #include <RED4ext/Common.hpp>
-#include <RED4ext/DynArray.hpp>
+#include <RED4ext/Containers/DynArray.hpp>
+#include <RED4ext/Containers/HashMap.hpp>
+#include <RED4ext/Containers/Map.hpp>
+#include <RED4ext/Containers/SortedArray.hpp>
 #include <RED4ext/Handle.hpp>
-#include <RED4ext/HashMap.hpp>
-#include <RED4ext/Map.hpp>
 #include <RED4ext/NativeTypes.hpp>
 #include <RED4ext/RTTITypes.hpp>
 #include <RED4ext/Scripting/IScriptable.hpp>
 #include <RED4ext/Scripting/Stack.hpp>
 #include <RED4ext/SharedMutex.hpp>
-#include <RED4ext/SortedArray.hpp>
 
 namespace RED4ext
 {

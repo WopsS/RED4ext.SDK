@@ -3,7 +3,7 @@
 #include <cstdint>
 
 #include <RED4ext/Common.hpp>
-#include <RED4ext/HashMap.hpp>
+#include <RED4ext/Containers/HashMap.hpp>
 #include <RED4ext/Hashing/FNV1a.hpp>
 
 namespace RED4ext

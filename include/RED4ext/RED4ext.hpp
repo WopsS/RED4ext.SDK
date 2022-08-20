@@ -6,12 +6,12 @@
 #include <RED4ext/CName.hpp>
 #include <RED4ext/CNamePool.hpp>
 #include <RED4ext/CString.hpp>
-#include <RED4ext/DynArray.hpp>
+#include <RED4ext/Containers/DynArray.hpp>
 #include <RED4ext/GameApplication.hpp>
 #include <RED4ext/GameEngine.hpp>
 #include <RED4ext/GameStates.hpp>
 #include <RED4ext/Handle.hpp>
-#include <RED4ext/HashMap.hpp>
+#include <RED4ext/Containers/HashMap.hpp>
 #include <RED4ext/Hashing/CRC.hpp>
 #include <RED4ext/Hashing/FNV1a.hpp>
 #include <RED4ext/Hashing/Murmur3.hpp>

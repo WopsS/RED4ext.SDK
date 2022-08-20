@@ -3,8 +3,8 @@
 #include <type_traits>
 
 #include <RED4ext/Common.hpp>
-#include <RED4ext/DynArray.hpp>
-#include <RED4ext/HashMap.hpp>
+#include <RED4ext/Containers/DynArray.hpp>
+#include <RED4ext/Containers/HashMap.hpp>
 #include <RED4ext/Memory/Allocators.hpp>
 #include <RED4ext/Memory/SharedPtr.hpp>
 #include <RED4ext/Relocation.hpp>
