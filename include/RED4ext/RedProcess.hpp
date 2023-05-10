@@ -1,8 +1,7 @@
 #include <RED4ext/RED4ext.hpp>
 
-namespace RED4ext::red
+namespace RED4ext
 {
-
 struct Process
 {
     struct FixedWString
@@ -12,7 +11,7 @@ struct Process
         const wchar_t* str;
     };
 
-    enum class ExecutionFlags : unsigned char
+    enum class ExecutionFlags : std::uint8_t
     {
         // unsets CREATE_NO_WINDOW
         ShouldCreateWindow = 0x1,
@@ -22,7 +21,7 @@ struct Process
         NoInheritHandles = 0x4
     };
 
-    enum class ReadFlags : unsigned char
+    enum class ReadFlags : std::uint8_t
     {
         // open & read regardless of other options
         Unk1 = 0x1,
@@ -32,7 +31,7 @@ struct Process
         GetCString = 0x4
     };
 
-    static const constexpr uint32_t defaultTimeout = 60000;
+    static constexpr uint32_t DefaultTimeout = 60000;
 
     // creates the read & write pipes, and handle information
     /// @pattern 48 89 5C 24 08 57 48 83 EC 40 33 C0 C7 44 24 20 18 00 00 00 48 8D 91 08 20 00 00 48 89 81 00 20
@@ -58,7 +57,7 @@ struct Process
                               const ExecutionFlags aFlags);
 
     /// @pattern 48 89 5C 24 08 57 48 83 EC 20 48 8B D9 41 0F B6 F8 48 8B 89 10 20 00 00 FF 15 52 6D 4B 00 85 C0
-    bool RED4EXT_CALL Terminate(const uint32_t aExitCode, const bool closeHandles);
+    bool RED4EXT_CALL Terminate(const uint32_t aExitCode, const bool aCloseHandles);
 
     /// @pattern 48 83 EC 48 48 8B 89 10 20 00 00 FF 15 F7 6B 4B 00 85 C0 74 4A 3D 02 01 00 00 74 3C FF 15 BE 6A
     bool RED4EXT_CALL WaitUntilCompleted(const uint32_t aTimeoutMS) const;
@@ -74,5 +73,4 @@ struct Process
 
 DEFINE_ENUM_FLAG_OPERATORS(Process::ExecutionFlags);
 DEFINE_ENUM_FLAG_OPERATORS(Process::ReadFlags);
-
 } // namespace RED4ext::red
