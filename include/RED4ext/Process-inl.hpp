@@ -23,28 +23,28 @@ inline bool RED4ext::Process::CloseHandles()
     return call(this);
 }
 
-inline bool RED4ext::Process::Execute(const RED4ext::CString& a1, RED4ext::Process::FixedWString& a2,
+inline bool RED4ext::Process::Execute(const RED4ext::CString& a1, RED4ext::CWideString& a2,
                                       const RED4ext::CString& a3, const RED4ext::Process::ExecutionFlags a4)
 {
-    using Process_Execute_t = bool (*)(RED4ext::Process*, const RED4ext::CString&, RED4ext::Process::FixedWString&,
+    using Process_Execute_t = bool (*)(RED4ext::Process*, const RED4ext::CString&, RED4ext::CWideString&,
                                        const RED4ext::CString&, const RED4ext::Process::ExecutionFlags);
     RED4ext::RelocFunc<Process_Execute_t> call(Process_Execute_Addr);
     return call(this, a1, a2, a3, a4);
 }
 
-inline bool RED4ext::Process::Execute(const RED4ext::CString& a1, RED4ext::Process::FixedWString& a2,
-                                      const RED4ext::Process::FixedWString& a3,
+inline bool RED4ext::Process::Execute(const RED4ext::CString& a1, RED4ext::CWideString& a2,
+                                      const RED4ext::CWideString& a3,
                                       const RED4ext::Process::ExecutionFlags a4)
 {
-    using Process_Execute_0_t = bool (*)(RED4ext::Process*, const RED4ext::CString&, RED4ext::Process::FixedWString&,
-                                         const RED4ext::Process::FixedWString&, const RED4ext::Process::ExecutionFlags);
+    using Process_Execute_0_t = bool (*)(RED4ext::Process*, const RED4ext::CString&, RED4ext::CWideString&,
+                                         const RED4ext::CWideString&, const RED4ext::Process::ExecutionFlags);
     RED4ext::RelocFunc<Process_Execute_0_t> call(Process_Execute_0_Addr);
     return call(this, a1, a2, a3, a4);
 }
 
-inline uint64_t RED4ext::Process::GetExitCode()
+inline uint32_t RED4ext::Process::GetExitCode()
 {
-    using Process_GetExitCode_t = uint64_t (*)(RED4ext::Process*);
+    using Process_GetExitCode_t = uint32_t (*)(RED4ext::Process*);
     RED4ext::RelocFunc<Process_GetExitCode_t> call(Process_GetExitCode_Addr);
     return call(this);
 }
