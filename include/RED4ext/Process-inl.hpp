@@ -16,45 +16,58 @@
 #define Process_Terminate_Addr 0x2C24040
 #define Process_WaitUntilCompleted_Addr 0x2C240B0
 
-inline bool RED4ext::Process::CloseHandles() {
+inline bool RED4ext::Process::CloseHandles()
+{
     using Process_CloseHandles_t = bool (*)(RED4ext::Process*);
     RED4ext::RelocFunc<Process_CloseHandles_t> call(Process_CloseHandles_Addr);
     return call(this);
 }
 
-inline bool RED4ext::Process::Execute(const RED4ext::CString& a1, RED4ext::Process::FixedWString& a2, const RED4ext::CString& a3, const RED4ext::Process::ExecutionFlags a4) {
-    using Process_Execute_t = bool (*)(RED4ext::Process*, const RED4ext::CString&, RED4ext::Process::FixedWString&, const RED4ext::CString&, const RED4ext::Process::ExecutionFlags);
+inline bool RED4ext::Process::Execute(const RED4ext::CString& a1, RED4ext::Process::FixedWString& a2,
+                                      const RED4ext::CString& a3, const RED4ext::Process::ExecutionFlags a4)
+{
+    using Process_Execute_t = bool (*)(RED4ext::Process*, const RED4ext::CString&, RED4ext::Process::FixedWString&,
+                                       const RED4ext::CString&, const RED4ext::Process::ExecutionFlags);
     RED4ext::RelocFunc<Process_Execute_t> call(Process_Execute_Addr);
     return call(this, a1, a2, a3, a4);
 }
 
-inline bool RED4ext::Process::Execute(const RED4ext::CString& a1, RED4ext::Process::FixedWString& a2, const RED4ext::Process::FixedWString& a3, const RED4ext::Process::ExecutionFlags a4) {
-    using Process_Execute_0_t = bool (*)(RED4ext::Process*, const RED4ext::CString&, RED4ext::Process::FixedWString&, const RED4ext::Process::FixedWString&, const RED4ext::Process::ExecutionFlags);
+inline bool RED4ext::Process::Execute(const RED4ext::CString& a1, RED4ext::Process::FixedWString& a2,
+                                      const RED4ext::Process::FixedWString& a3,
+                                      const RED4ext::Process::ExecutionFlags a4)
+{
+    using Process_Execute_0_t = bool (*)(RED4ext::Process*, const RED4ext::CString&, RED4ext::Process::FixedWString&,
+                                         const RED4ext::Process::FixedWString&, const RED4ext::Process::ExecutionFlags);
     RED4ext::RelocFunc<Process_Execute_0_t> call(Process_Execute_0_Addr);
     return call(this, a1, a2, a3, a4);
 }
 
-inline uint64_t RED4ext::Process::GetExitCode() {
+inline uint64_t RED4ext::Process::GetExitCode()
+{
     using Process_GetExitCode_t = uint64_t (*)(RED4ext::Process*);
     RED4ext::RelocFunc<Process_GetExitCode_t> call(Process_GetExitCode_Addr);
     return call(this);
 }
 
-inline void RED4ext::Process::ReadFromPipe(const RED4ext::Process::ReadFlags a1, const RED4ext::CString& a2, RED4ext::CString& a3) {
-    using Process_ReadFromPipe_t = void (*)(RED4ext::Process*, const RED4ext::Process::ReadFlags, const RED4ext::CString&, RED4ext::CString&);
+inline void RED4ext::Process::ReadFromPipe(const RED4ext::Process::ReadFlags a1, const RED4ext::CString& a2,
+                                           RED4ext::CString& a3)
+{
+    using Process_ReadFromPipe_t =
+        void (*)(RED4ext::Process*, const RED4ext::Process::ReadFlags, const RED4ext::CString&, RED4ext::CString&);
     RED4ext::RelocFunc<Process_ReadFromPipe_t> call(Process_ReadFromPipe_Addr);
     return call(this, a1, a2, a3);
 }
 
-inline bool RED4ext::Process::Terminate(const uint32_t a1, const bool a2) {
+inline bool RED4ext::Process::Terminate(const uint32_t a1, const bool a2)
+{
     using Process_Terminate_t = bool (*)(RED4ext::Process*, const uint32_t, const bool);
     RED4ext::RelocFunc<Process_Terminate_t> call(Process_Terminate_Addr);
     return call(this, a1, a2);
 }
 
-inline bool RED4ext::Process::WaitUntilCompleted(const uint32_t a1) const {
+inline bool RED4ext::Process::WaitUntilCompleted(const uint32_t a1) const
+{
     using Process_WaitUntilCompleted_t = bool (*)(RED4ext::Process*, const uint32_t);
     RED4ext::RelocFunc<Process_WaitUntilCompleted_t> call(Process_WaitUntilCompleted_Addr);
     return call(this, a1);
 }
-
