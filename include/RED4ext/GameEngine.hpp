@@ -54,7 +54,7 @@ RED4EXT_ASSERT_SIZE(GameInstance, 0x138);
 struct CBaseEngine
 {
     // https://github.com/yamashi/RED4ext/commit/2d30f32826276458f86da8b4c26940924044564d
-    struct UnkC0
+    struct UnkD0
     {
         uint8_t pad0[0x140];
         uint32_t unk140;
@@ -66,10 +66,10 @@ struct CBaseEngine
         uint8_t pad170[0x9];
         uint8_t isClipped;
     };
-    RED4EXT_ASSERT_OFFSET(UnkC0, unk154, 0x154);
-    RED4EXT_ASSERT_OFFSET(UnkC0, unk164, 0x164);
-    RED4EXT_ASSERT_OFFSET(UnkC0, hWnd, 0x168);
-    RED4EXT_ASSERT_OFFSET(UnkC0, isClipped, 0x179);
+    RED4EXT_ASSERT_OFFSET(UnkD0, unk154, 0x154);
+    RED4EXT_ASSERT_OFFSET(UnkD0, unk164, 0x164);
+    RED4EXT_ASSERT_OFFSET(UnkD0, hWnd, 0x168);
+    RED4EXT_ASSERT_OFFSET(UnkD0, isClipped, 0x179);
 
     struct Unk108
     {
@@ -158,9 +158,9 @@ struct CBaseEngine
     int64_t unkA8;                             // A8
     int64_t unkB0;                             // B0
     int64_t unkB8;                             // B8
-    UnkC0* unkC0;                              // C0
-    double unkC8;                              // C8
-    double unkD0;                              // D0
+    void* unkC0;                               // C0
+    void* unkC8;                               // C8
+    UnkD0* unkD0;                              // D0
     int32_t unkD8;                             // D8
     int64_t unkE0;                             // E0
     int64_t unkE8;                             // E8
