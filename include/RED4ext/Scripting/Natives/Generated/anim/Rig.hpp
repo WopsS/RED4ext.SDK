@@ -29,7 +29,8 @@ struct Rig : CResource
     static constexpr const char* NAME = "animRig";
     static constexpr const char* ALIAS = NAME;
 
-    uint8_t unk40[0x50 - 0x40]; // 40
+    int16_t* boneParentIndexes; // 40
+    QsTransform* boneTransforms; // 48
     DynArray<CName> boneNames; // 50
     DynArray<QsTransform> referencePoseMS; // 60
     DynArray<int16_t> levelOfDetailStartIndices; // 70
