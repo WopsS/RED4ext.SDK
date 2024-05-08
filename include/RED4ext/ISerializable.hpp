@@ -16,14 +16,23 @@ struct CClass;
 struct BaseStream;
 struct CString;
 
+struct PostLoadParams
+{
+    bool disablePreInitialization; // 00
+    uint8_t pad01[0x8 - 0x1];      // 01
+};
+RED4EXT_ASSERT_SIZE(PostLoadParams, 0x8);
+
 struct ISerializable
 {
+    ISerializable();
+
     virtual CClass* GetNativeType() = 0;                                                // 00
     virtual CClass* GetType();                                                          // 08
     virtual Memory::IAllocator* GetAllocator();                                         // 10
     virtual ~ISerializable() = default;                                                 // 18
     virtual void sub_20();                                                              // 20
-    virtual void sub_28();                                                              // 28
+    virtual void PostLoad(const PostLoadParams& aParams);                               // 28
     virtual bool sub_30();                                                              // 30
     virtual void sub_38();                                                              // 38
     virtual bool sub_40(BaseStream* aStream);                                           // 40
@@ -51,7 +60,9 @@ struct ISerializable
 
     WeakHandle<ISerializable> ref;   // 00 - Initialized in Handle ctor
     WeakHandle<ISerializable> unk18; // 18
-    uint64_t unk28;                  // 28 - Incremental ID set in ISerializable ctor, can be zero
+    uint64_t unk28;                  // 28 - Global incremental ID, used in serialization
+
+    inline static UniversalRelocPtr<volatile int64_t> s_globalIDCounter{Detail::AddressHashes::ISerializable_Counter};
 };
 RED4EXT_ASSERT_SIZE(ISerializable, 0x30);
 } // namespace RED4ext

@@ -8,6 +8,11 @@
 #include <RED4ext/RTTITypes.hpp>
 #include <RED4ext/Relocation.hpp>
 
+RED4EXT_INLINE RED4ext::ISerializable::ISerializable()
+    : unk28(InterlockedIncrement64(s_globalIDCounter.GetAddr()))
+{
+}
+
 RED4EXT_INLINE RED4ext::CClass* RED4ext::ISerializable::GetType()
 {
     return GetNativeType();
@@ -22,8 +27,9 @@ RED4EXT_INLINE void RED4ext::ISerializable::sub_20()
 {
 }
 
-RED4EXT_INLINE void RED4ext::ISerializable::sub_28()
+RED4EXT_INLINE void RED4ext::ISerializable::PostLoad(const RED4ext::PostLoadParams& aParams)
 {
+    RED4EXT_UNUSED_PARAMETER(aParams);
 }
 
 RED4EXT_INLINE bool RED4ext::ISerializable::sub_30()

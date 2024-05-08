@@ -121,6 +121,7 @@ constexpr std::uint32_t ISerializable_sub_40 = 0x88B30FF9;
 constexpr std::uint32_t ISerializable_sub_78 = 0xA1D93993;
 constexpr std::uint32_t ISerializable_sub_A0 = 0xED221B32;
 constexpr std::uint32_t ISerializable_sub_C0 = 0x80201C35;
+constexpr std::uint32_t ISerializable_Counter = 2630817091;
 #pragma endregion
 
 #pragma region JobDispatcher
@@ -129,9 +130,12 @@ constexpr std::uint32_t JobDispatcher_DispatchJob = 0x9C441E82;
 #pragma endregion
 
 #pragma region JobHandle
-constexpr std::uint32_t JobHandle_ctor = 0x6EFF1BD2;
 constexpr std::uint32_t JobHandle_dtor = 0x9E480A2E;
 constexpr std::uint32_t JobHandle_Join = 0x9C9C097C;
+#pragma endregion
+
+#pragma region JobInternalHandle
+constexpr std::uint32_t JobInternalHandle_Acquire = 0x6EFF1BD2;
 #pragma endregion
 
 #pragma region JobQueue
@@ -155,6 +159,18 @@ constexpr std::uint32_t Memory_PoolStorage_OOM = 0xD54F163A;
 
 #pragma region OpcodeHandlers
 constexpr std::uint32_t OpcodeHandlers = 0x39532858;
+#pragma endregion
+
+#pragma region ObjectPackageExtractor
+constexpr std::uint32_t ObjectPackageExtractor_Initialize = 2318998714;
+constexpr std::uint32_t ObjectPackageExtractor_ExtractSync = 2038372664;
+constexpr std::uint32_t ObjectPackageExtractor_ExtractAsync = 3819248393;
+#pragma endregion
+
+#pragma region ObjectPackageReader
+constexpr std::uint32_t ObjectPackageReader_ctor = 3628731410;
+constexpr std::uint32_t ObjectPackageReader_OnReadHeader = 1632836642;
+constexpr std::uint32_t ObjectPackageReader_ReadHeader = 1285757088;
 #pragma endregion
 
 #pragma region ResourceDepot
@@ -193,6 +209,11 @@ constexpr std::uint32_t TweakDB_CreateRecord = 0x3201127A;
 #pragma region UpdateRegistrar
 constexpr std::uint32_t UpdateRegistrar_RegisterGroupUpdate = 0xFD914605;
 constexpr std::uint32_t UpdateRegistrar_RegisterBucketUpdate = 0x192F4EA2;
+#pragma endregion
+
+#pragma region DeferredDataBuffer
+constexpr std::uint32_t DeferredDataBuffer_LoadAsync = 4125893577;
+constexpr std::uint32_t DeferredDataBuffer_LoadRefAsync = 1459046115;
 #pragma endregion
 }
 // clang-format on

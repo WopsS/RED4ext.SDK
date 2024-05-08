@@ -16,7 +16,7 @@ template<typename R, typename... Args>
 struct CallbackHandler
 {
     template<typename T>
-    using InvokeFunc = R (*)(T* aTarget, Args&&... aArgs);
+    using InvokeFunc = R (*)(const T* aTarget, Args&&... aArgs);
 
     template<typename T>
     using CopyFunc = void (*)(T* aDst, T* aSrc);
@@ -66,6 +66,12 @@ public:
     using HandlerPtr = CallbackHandler<R, Args...>*;
 
     static_assert(InlineSize >= sizeof(void*), "Buffer size can't be less than pointer size");
+
+    Callback()
+        : buffer()
+        , handler(nullptr)
+    {
+    }
 
     Callback(R (*aFunc)(Args...)) noexcept
     {
@@ -141,9 +147,9 @@ public:
         ResetHandler();
     }
 
-    R operator()(Args&&... aArgs) const
+    auto operator()(Args&&... aArgs) const
     {
-        return InvokeTarget(buffer, std::forward<Args>(aArgs)...);
+        return InvokeTarget(std::forward<Args>(aArgs)...);
     }
 
     uint8_t buffer[InlineSize];
@@ -176,7 +182,7 @@ private:
         handler = nullptr;
     }
 
-    R InvokeTarget(Args&&... aArgs) const
+    inline auto InvokeTarget(Args&&... aArgs) const
     {
         return handler->invoke(buffer, std::forward<Args>(aArgs)...);
     }
@@ -219,6 +225,14 @@ public:
     using AllocatorType = Memory::DefaultAllocator;
 
     static_assert(InlineSize >= sizeof(void*), "Buffer size can't be less than pointer size");
+
+    FlexCallback()
+        : buffer()
+        , handler(nullptr)
+        , allocator(0)
+        , extendedSize(0)
+    {
+    }
 
     FlexCallback(R (*aFunc)(Args...))
         : allocator(0)
@@ -304,7 +318,7 @@ public:
         ResetHandler();
     }
 
-    R operator()(Args&&... aArgs) const
+    auto operator()(Args&&... aArgs) const
     {
         return InvokeTarget(std::forward<Args>(aArgs)...);
     }
@@ -397,14 +411,14 @@ protected:
         return InlineSize;
     }
 
-    [[nodiscard]] void* GetBuffer() noexcept
+    [[nodiscard]] void* GetBuffer() const noexcept
     {
         if (IsExtendedMode())
         {
-            return *reinterpret_cast<void**>(buffer);
+            return *reinterpret_cast<void**>(const_cast<uint8_t*>(buffer));
         }
 
-        return buffer;
+        return const_cast<uint8_t*>(buffer);
     }
 
     void ResetBuffer()
@@ -416,7 +430,7 @@ protected:
         }
     }
 
-    inline R InvokeTarget(Args&&... aArgs) const
+    inline auto InvokeTarget(Args&&... aArgs) const
     {
         return handler->invoke(GetBuffer(), std::forward<Args>(aArgs)...);
     }

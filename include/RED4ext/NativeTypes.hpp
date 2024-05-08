@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <string_view>
 
+#include <RED4ext/Buffer.hpp>
 #include <RED4ext/CName.hpp>
 #include <RED4ext/CString.hpp>
 #include <RED4ext/Common.hpp>
@@ -12,7 +13,6 @@
 #include <RED4ext/InstanceType.hpp>
 #include <RED4ext/NodeRef.hpp>
 #include <RED4ext/ResourceReference.hpp>
-#include <RED4ext/Unks.hpp>
 
 namespace RED4ext
 {
@@ -137,9 +137,14 @@ struct Variant
     Variant() noexcept = default;
     Variant(const CBaseRTTIType* aType);
     Variant(const CBaseRTTIType* aType, const ScriptInstance aData);
-    Variant(const CName& aTypeName, const ScriptInstance aData);
+    Variant(CName aTypeName);
+    Variant(CName aTypeName, const ScriptInstance aData);
     Variant(const Variant& aOther);
+    Variant(Variant&& aOther) noexcept;
     ~Variant();
+
+    Variant& operator=(const Variant& aRhs);
+    Variant& operator=(Variant&& aRhs) noexcept;
 
     bool IsEmpty() const noexcept;
     bool IsInlined() const noexcept;
@@ -162,41 +167,6 @@ struct Variant
     };
 };
 RED4EXT_ASSERT_SIZE(Variant, 0x18);
-
-struct RawBuffer
-{
-    void* data;         // 00
-    uint32_t size;      // 08
-    uint32_t alignment; // 0C
-    Unk530 unk10;       // 10
-};
-RED4EXT_ASSERT_SIZE(RawBuffer, 0x20);
-
-struct DataBuffer
-{
-    RawBuffer buffer; // 00
-    uint64_t unk20;   // 20 - Pointer to something
-};
-RED4EXT_ASSERT_SIZE(DataBuffer, 0x28);
-
-struct SharedDataBuffer
-{
-    int64_t unk00; // 00
-};
-RED4EXT_ASSERT_SIZE(SharedDataBuffer, 0x8);
-
-struct DeferredDataBuffer
-{
-    int64_t unk00;    // 00
-    int64_t unk08;    // 08
-    RawBuffer buffer; // 10
-    int64_t unk30;    // 30
-    int8_t unk38;     // 38
-    int64_t unk40;    // 40
-    int64_t unk48;    // 48
-    int64_t unk50;    // 50
-};
-RED4EXT_ASSERT_SIZE(DeferredDataBuffer, 0x58);
 
 struct gamedataLocKeyWrapper
 {
