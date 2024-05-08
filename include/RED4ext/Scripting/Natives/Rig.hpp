@@ -25,9 +25,9 @@ struct Rig : CResource
     static constexpr const char* NAME = "animRig";
     static constexpr const char* ALIAS = NAME;
 
-    // `boneParentIndexes`(0x40) and `boneTransforms`(0x48) are the same size as `boneNames`(0x50)
-    int16_t* boneParentIndexes; // 40
-    QsTransform* boneTransforms; // 48
+    // parentIndeces(0x40) and referencePoseLS(0x48) share size with boneNames(0x50)
+    int16_t* parentIndeces; // 40
+    QsTransform* referencePoseLS; // 48
     DynArray<CName> boneNames; // 50
     DynArray<QsTransform> referencePoseMS; // 60
     DynArray<int16_t> levelOfDetailStartIndices; // 70
@@ -37,11 +37,11 @@ struct Rig : CResource
     uint8_t unk95[0xB8 - 0x95]; // 95
     DynArray<QsTransform> aPoseLS; // B8
     DynArray<QsTransform> aPoseMS; // C8
-    uint8_t unkD8[0xE8 - 0xD8]; // D8
+    DynArray<CName> boneMetaNames; // D8
     DynArray<CName> trackNames; // E8
     DynArray<float> referenceTracks; // F8
     DynArray<anim::FloatTrackInfo> rigExtraTracks; // 108
-    uint8_t unk118[0x120 - 0x118]; // 118
+    uint64_t hash; // 118
     red::TagList tags; // 120
     DynArray<anim::RigPart> parts; // 130
     DynArray<anim::RigRetarget> retargets; // 140
