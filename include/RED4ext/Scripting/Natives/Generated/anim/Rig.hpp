@@ -4,6 +4,20 @@
 
 // This file is generated from the Game's Reflection data
 
+#include <RED4ext/Scripting/Natives/Rig.hpp>
+
+namespace RED4ext
+{
+namespace anim { struct IRigIkSetup; }
+
+namespace anim
+{
+RED4EXT_ASSERT_SIZE(Rig, 0x180);
+} // namespace anim
+using animRig = anim::Rig;
+} // namespace RED4ext
+
+/*
 #include <cstdint>
 #include <RED4ext/Common.hpp>
 #include <RED4ext/CName.hpp>
@@ -29,8 +43,7 @@ struct Rig : CResource
     static constexpr const char* NAME = "animRig";
     static constexpr const char* ALIAS = NAME;
 
-    int16_t* boneParentIndexes; // 40
-    QsTransform* boneTransforms; // 48
+    uint8_t unk40[0x50 - 0x40]; //40
     DynArray<CName> boneNames; // 50
     DynArray<QsTransform> referencePoseMS; // 60
     DynArray<int16_t> levelOfDetailStartIndices; // 70
@@ -55,6 +68,6 @@ struct Rig : CResource
 RED4EXT_ASSERT_SIZE(Rig, 0x180);
 } // namespace anim
 using animRig = anim::Rig;
-} // namespace RED4ext
+} // namespace RED4ext*/
 
 // clang-format on
