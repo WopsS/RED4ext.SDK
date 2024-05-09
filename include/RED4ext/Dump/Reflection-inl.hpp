@@ -308,7 +308,7 @@ RED4EXT_INLINE void Dump(std::filesystem::path aOutPath, std::filesystem::path a
                                      {"BaseGameEngine", "GameEngine"},
                                      {"CGameEngine", "GameEngine"},
                                      {"UpdateBucketEnum", "SystemUpdate"},
-                                     {"Rig", "Rig"}};
+                                     {"animRig", "Rig"}};
 
     std::regex invalidChars(INVALID_CHARACTERS);
     std::regex invalidKeywords(INVALID_KEYWORDS);
