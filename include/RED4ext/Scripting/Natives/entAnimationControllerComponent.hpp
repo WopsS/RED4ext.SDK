@@ -2,8 +2,6 @@
 
 // clang-format off
 
-// This file is generated from the Game's Reflection data
-
 #include <RED4ext/Common.hpp>
 #include <RED4ext/Handle.hpp>
 #include <RED4ext/NativeTypes.hpp>
@@ -33,6 +31,8 @@ struct IKTargetController
         Handle<IPositionProvider> positionProvider;       // 10
         Handle<IOrientationProvider> orientationProvider; // 20
     };
+    RED4EXT_ASSERT_SIZE(IKTargetData, 0x30);
+
     AnimationControllerComponent& animationControllerComponent; // 00
     uint64_t unk08;                                             // 08
     DynArray<IKTargetData> IKTargetData;                        // 10
@@ -42,23 +42,26 @@ RED4EXT_ASSERT_SIZE(IKTargetController, 0x30);
 
 struct LookAtController
 {
-    struct LookAtData
+    struct LookatData
     {
         anim::LookAtRef lookAtRef;                  // 00
         Handle<IPositionProvider> positionProvider; // 10
         uint32_t unk20;                             // 20
     };
-    struct AdditionalLookatdata
+    RED4EXT_ASSERT_SIZE(LookAtData, 0x28);
+    struct AdditionalLookatData
     {
         CName partName;                       // 00                    
         DynArray<anim::LookAtRef> lookAtRefs; // 08
     };
+    RED4EXT_ASSERT_SIZE(AdditionalLookatData, 0x28);
+
     AnimationControllerComponent& animationControllerComponent; // 00
     uint32_t unkCounter;                                        // 08
     void* unk10;                                                // 10
     bool usingTPPCamera;                                        // 18
-    DynArray<LookAtData> lookAtData;                            // 20
-    DynArray<AdditionalLookatdata> additionalLookatdata;        // 30
+    DynArray<LookatData> lookAtData;                            // 20
+    DynArray<AdditionalLookatData> additionalLookatdata;        // 30
     Handle<anim::LookAtParams_UpdatePositions> lookAtparams;    // 40
     uint64_t unk50[5];                                          // 50
     float unk78;                                                // 78
