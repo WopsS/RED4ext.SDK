@@ -48,7 +48,7 @@ struct LookAtController
         Handle<IPositionProvider> positionProvider; // 10
         uint32_t unk20;                             // 20
     };
-    RED4EXT_ASSERT_SIZE(LookAtData, 0x28);
+    RED4EXT_ASSERT_SIZE(LookatData, 0x28);
     struct AdditionalLookatData
     {
         CName partName;                       // 00                    
