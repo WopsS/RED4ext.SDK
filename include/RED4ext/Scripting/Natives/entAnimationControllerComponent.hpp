@@ -1,7 +1,5 @@
 #pragma once
 
-// clang-format off
-
 #include <RED4ext/Common.hpp>
 #include <RED4ext/Handle.hpp>
 #include <RED4ext/NativeTypes.hpp>
