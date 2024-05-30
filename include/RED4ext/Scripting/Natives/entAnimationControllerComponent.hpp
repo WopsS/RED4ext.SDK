@@ -4,18 +4,21 @@
 #include <RED4ext/Handle.hpp>
 #include <RED4ext/NativeTypes.hpp>
 #include <RED4ext/Scripting/Natives/Generated/anim/AnimDatabaseCollection.hpp>
-#include <RED4ext/Scripting/Natives/Generated/ent/IComponent.hpp>
-#include <RED4ext/Scripting/Natives/Generated/anim/IKTargetRef.hpp>
 #include <RED4ext/Scripting/Natives/Generated/anim/IKTargetParams_Update.hpp>
+#include <RED4ext/Scripting/Natives/Generated/anim/IKTargetRef.hpp>
+#include <RED4ext/Scripting/Natives/Generated/anim/LookAtParams_UpdatePositions.hpp>
+#include <RED4ext/Scripting/Natives/Generated/anim/LookAtRef.hpp>
+#include <RED4ext/Scripting/Natives/Generated/ent/IComponent.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/IOrientationProvider.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/IPositionProvider.hpp>
-#include <RED4ext/Scripting/Natives/Generated/anim/LookAtRef.hpp>
-#include <RED4ext/Scripting/Natives/Generated/anim/LookAtParams_UpdatePositions.hpp>
 #include <cstdint>
 
 namespace RED4ext
 {
-namespace anim { struct ActionAnimDatabase; }
+namespace anim
+{
+struct ActionAnimDatabase;
+}
 namespace ent
 {
 struct AnimationControlBinding;
@@ -73,7 +76,7 @@ struct AnimationControllerComponent : ent::IComponent
     static constexpr const char* NAME = "entAnimationControllerComponent";
     static constexpr const char* ALIAS = "AnimationControllerComponent";
 
-    uint64_t unk90[7];                                   // 90 
+    uint64_t unk90[7];                                   // 90
     void* unkC8;                                         // C8
     void* unkD0;                                         // D0
     DynArray<uint64_t> unkD8Array;                       // D8
