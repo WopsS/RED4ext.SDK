@@ -52,7 +52,7 @@ struct LookAtController
     RED4EXT_ASSERT_SIZE(LookatData, 0x28);
     struct AdditionalLookatData
     {
-        CName partName;                       // 00                    
+        CName partName;                       // 00
         DynArray<anim::LookAtRef> lookAtRefs; // 08
     };
     RED4EXT_ASSERT_SIZE(AdditionalLookatData, 0x28);
