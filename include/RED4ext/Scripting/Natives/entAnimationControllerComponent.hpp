@@ -82,7 +82,6 @@ RED4EXT_ASSERT_OFFSET(LookAtController, lookAtData, 0x20);
 RED4EXT_ASSERT_OFFSET(LookAtController, additionalLookAtData, 0x30);
 RED4EXT_ASSERT_OFFSET(LookAtController, lookAtParams, 0x30);
 
-
 struct AnimationControllerComponent : ent::IComponent
 {
     static constexpr const char* NAME = "entAnimationControllerComponent";
