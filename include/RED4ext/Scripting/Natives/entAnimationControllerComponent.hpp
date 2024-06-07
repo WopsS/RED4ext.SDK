@@ -71,8 +71,8 @@ struct LookAtController
     AnimationControllerComponent* animationControllerComponent; // 00
     uint8_t unk08[0x18 - 0x08];                                 // 08
     bool usingTPPCamera;                                        // 18
-    DynArray<LookatData> lookAtData;                            // 20
-    DynArray<AdditionalLookatData> additionalLookAtData;        // 30
+    DynArray<LookAtData> lookAtData;                            // 20
+    DynArray<AdditionalLookAtData> additionalLookAtData;        // 30
     Handle<anim::LookAtParams_UpdatePositions> lookAtParams;    // 40
     uint8_t unk50[0x88 - 0x50];                                 // 50
 };
@@ -103,6 +103,4 @@ RED4EXT_ASSERT_OFFSET(AnimationControllerComponent, ikTargetController, 0x1A8);
 RED4EXT_ASSERT_OFFSET(AnimationControllerComponent, controlBinding, 0x1E0);
 
 } // namespace ent
-using entAnimationControllerComponent = ent::AnimationControllerComponent;
-using AnimationControllerComponent = ent::AnimationControllerComponent;
 } // namespace RED4ext
