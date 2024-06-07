@@ -28,71 +28,82 @@ struct IKTargetController
 {
     struct IKTargetData
     {
-        anim::IKTargetRef ikTargetref;                    // 00
+        anim::IKTargetRef targetReference;                // 00
         Handle<IPositionProvider> positionProvider;       // 10
         Handle<IOrientationProvider> orientationProvider; // 20
     };
     RED4EXT_ASSERT_SIZE(IKTargetData, 0x30);
+    RED4EXT_ASSERT_OFFSET(IKTargetData, targetReference, 0x00);
+    RED4EXT_ASSERT_OFFSET(IKTargetData, positionProvider, 0x10);
+    RED4EXT_ASSERT_OFFSET(IKTargetData, orientationProvider, 0x20);
 
-    AnimationControllerComponent& animationControllerComponent; // 00
-    uint64_t unk08;                                             // 08
-    DynArray<IKTargetData> IKTargetData;                        // 10
-    Handle<anim::IKTargetParams_Update> IKparams;               // 20
+    AnimationControllerComponent* animationControllerComponent; // 00
+    uint8_t unk08[0x10 - 0x8];                                  // 08
+    DynArray<IKTargetData> targetData;                          // 10
+    Handle<anim::IKTargetParams_Update> ikParams;               // 20
 };
 RED4EXT_ASSERT_SIZE(IKTargetController, 0x30);
+RED4EXT_ASSERT_OFFSET(IKTargetController, animationControllerComponent, 0x00);
+RED4EXT_ASSERT_OFFSET(IKTargetController, targetData, 0x10);
+RED4EXT_ASSERT_OFFSET(IKTargetController, ikParams, 0x20);
 
 struct LookAtController
 {
-    struct LookatData
+    struct LookAtData
     {
         anim::LookAtRef lookAtRef;                  // 00
         Handle<IPositionProvider> positionProvider; // 10
         uint32_t unk20;                             // 20
     };
-    RED4EXT_ASSERT_SIZE(LookatData, 0x28);
-    struct AdditionalLookatData
+    RED4EXT_ASSERT_SIZE(LookAtData, 0x28);
+    RED4EXT_ASSERT_OFFSET(LookAtData, lookAtRef, 0x00);
+    RED4EXT_ASSERT_OFFSET(LookAtData, positionProvider, 0x10);
+
+    struct AdditionalLookAtData
     {
         CName partName;                       // 00
         DynArray<anim::LookAtRef> lookAtRefs; // 08
     };
-    RED4EXT_ASSERT_SIZE(AdditionalLookatData, 0x28);
+    RED4EXT_ASSERT_SIZE(AdditionalLookAtData, 0x28);
+    RED4EXT_ASSERT_OFFSET(AdditionalLookAtData, partName, 0x00);
+    RED4EXT_ASSERT_OFFSET(AdditionalLookAtData, lookAtRefs, 0x08);
 
-    AnimationControllerComponent& animationControllerComponent; // 00
-    uint32_t unkCounter;                                        // 08
-    void* unk10;                                                // 10
+    AnimationControllerComponent* animationControllerComponent; // 00
+    uint8_t unk08[0x18 - 0x08];                                 // 08
     bool usingTPPCamera;                                        // 18
     DynArray<LookatData> lookAtData;                            // 20
-    DynArray<AdditionalLookatData> additionalLookatdata;        // 30
-    Handle<anim::LookAtParams_UpdatePositions> lookAtparams;    // 40
-    uint64_t unk50[5];                                          // 50
-    float unk78;                                                // 78
-    uint32_t unk7C;                                             // 7C
-    uint64_t unk80;                                             // 80
+    DynArray<AdditionalLookatData> additionalLookAtData;        // 30
+    Handle<anim::LookAtParams_UpdatePositions> lookAtParams;    // 40
+    uint8_t unk50[0x88 - 0x50];                                 // 50
 };
 RED4EXT_ASSERT_SIZE(LookAtController, 0x88);
+RED4EXT_ASSERT_OFFSET(LookAtController, animationControllerComponent, 0x00);
+RED4EXT_ASSERT_OFFSET(LookAtController, lookAtData, 0x20);
+RED4EXT_ASSERT_OFFSET(LookAtController, additionalLookAtData, 0x30);
+RED4EXT_ASSERT_OFFSET(LookAtController, lookAtParams, 0x30);
+
 
 struct AnimationControllerComponent : ent::IComponent
 {
     static constexpr const char* NAME = "entAnimationControllerComponent";
     static constexpr const char* ALIAS = "AnimationControllerComponent";
 
-    uint64_t unk90[7];                                   // 90
-    void* unkC8;                                         // C8
-    void* unkD0;                                         // D0
-    DynArray<uint64_t> unkD8Array;                       // D8
-    DynArray<uint64_t> unkE8Array;                       // E8
+    uint8_t unk90[0xF8 - 0x90];                          // 90
     Ref<anim::ActionAnimDatabase> actionAnimDatabaseRef; // F8
     anim::AnimDatabaseCollection animDatabaseCollection; // 110
     LookAtController lookAtController;                   // 120
-    IKTargetController ikTargetController;               // 1A0
+    IKTargetController ikTargetController;               // 1A8
     bool unk1D8;                                         // 1D8
     Handle<ent::AnimationControlBinding> controlBinding; // 1E0
 };
 RED4EXT_ASSERT_SIZE(AnimationControllerComponent, 0x1F0);
+RED4EXT_ASSERT_OFFSET(AnimationControllerComponent, actionAnimDatabaseRef, 0xF8);
+RED4EXT_ASSERT_OFFSET(AnimationControllerComponent, animDatabaseCollection, 0x110);
+RED4EXT_ASSERT_OFFSET(AnimationControllerComponent, lookAtController, 0x120);
+RED4EXT_ASSERT_OFFSET(AnimationControllerComponent, ikTargetController, 0x1A8);
+RED4EXT_ASSERT_OFFSET(AnimationControllerComponent, controlBinding, 0x1E0);
 
 } // namespace ent
 using entAnimationControllerComponent = ent::AnimationControllerComponent;
 using AnimationControllerComponent = ent::AnimationControllerComponent;
 } // namespace RED4ext
-
-// clang-format on
