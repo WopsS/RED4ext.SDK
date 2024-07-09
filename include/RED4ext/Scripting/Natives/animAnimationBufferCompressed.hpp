@@ -4,7 +4,7 @@
 #include <RED4ext/Common.hpp>
 #include <RED4ext/DynArray.hpp>
 #include <RED4ext/NativeTypes.hpp>
-#include <RED4ext/Range.hpp>
+#include <RED4ext/Span.hpp>
 #include <RED4ext/Scripting/Natives/AnimBufferState.hpp>
 #include <RED4ext/Scripting/Natives/AnimKeyFrames.hpp>
 #include <RED4ext/Scripting/Natives/Generated/anim/AnimDataAddress.hpp>
@@ -39,11 +39,11 @@ struct AnimationBufferCompressed : anim::IAnimationBuffer
     DataBuffer inplaceCompressedBuffer;           // C8
     DynArray<CName> extraDataNames;               // F0
     uint8_t unk100[0x110 - 0x100];                // 100
-    Range<KeyFrameCompressed> animKeysCompressed; // 110
-    Range<KeyFrameRaw> animKeysRaw;               // 120
-    Range<KeyFrameConst> constAnimKeys;           // 130
-    Range<TrackKey> trackKeys;                    // 140
-    Range<TrackKeyConst> constTrackKeys;          // 150
+    Span<KeyFrameCompressed> animKeysCompressed; // 110
+    Span<KeyFrameRaw> animKeysRaw;               // 120
+    Span<KeyFrameConst> constAnimKeys;           // 130
+    Span<TrackKey> trackKeys;                    // 140
+    Span<TrackKeyConst> constTrackKeys;          // 150
     AnimBufferState dataState;                    // 160
     uint64_t unk180;                              // 180
 };
