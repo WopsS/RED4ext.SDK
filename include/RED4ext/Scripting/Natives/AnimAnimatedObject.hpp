@@ -1,18 +1,18 @@
 #pragma once
 
 #include <RED4ext/NativeTypes.hpp>
-#include <RED4ext/Scripting/Natives/metaRig.hpp>
+#include <RED4ext/Scripting/Natives/Generated/Box.hpp>
+#include <RED4ext/Scripting/Natives/Generated/QsTransform.hpp>
 #include <RED4ext/Scripting/Natives/Generated/Vector3.hpp>
 #include <RED4ext/Scripting/Natives/Generated/Vector4.hpp>
-#include <RED4ext/Scripting/Natives/Generated/QsTransform.hpp>
-#include <RED4ext/Scripting/Natives/Generated/Box.hpp>
+#include <RED4ext/Scripting/Natives/AnimMetaRig.hpp>
 #include <cstdint>
 
 namespace RED4ext
 {
 namespace anim
 {
-struct AnimatedObject // This name might be wrong, it's an inference based off context
+struct AnimatedObject // This name might be wrong, it's an inference based on context
 {
     uint64_t metaRigID;
     anim::MetaRig* metaRig;         // 08
