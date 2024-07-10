@@ -10,7 +10,7 @@
 #include <RED4ext/Scripting/Natives/Generated/world/IRuntimeSystem.hpp>
 #include <RED4ext/Scripting/Natives/animRig.hpp>
 #include <RED4ext/Scripting/Natives/entEntity.hpp>
-#include <RED4ext/Scripting/Natives/metaRig.hpp>
+#include <RED4ext/Scripting/Natives/AnimMetaRig.hpp>
 #include <RED4ext/SystemUpdate.hpp>
 #include <cstdint>
 
