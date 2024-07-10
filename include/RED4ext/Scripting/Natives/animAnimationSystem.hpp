@@ -3,14 +3,14 @@
 #include <RED4ext/Common.hpp>
 #include <RED4ext/HashMap.hpp>
 #include <RED4ext/NativeTypes.hpp>
-#include <RED4ext/Scripting/Natives/AnimatedEntityData.hpp>
+#include <RED4ext/Scripting/Natives/AnimMetaRig.hpp>
+#include <RED4ext/Scripting/Natives/AnimAnimatedObject.hpp>
 #include <RED4ext/Scripting/Natives/Generated/Box.hpp>
 #include <RED4ext/Scripting/Natives/Generated/appearance/AppearanceResource.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/RagdollComponent.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/IRuntimeSystem.hpp>
 #include <RED4ext/Scripting/Natives/animRig.hpp>
 #include <RED4ext/Scripting/Natives/entEntity.hpp>
-#include <RED4ext/Scripting/Natives/AnimMetaRig.hpp>
 #include <RED4ext/SystemUpdate.hpp>
 #include <cstdint>
 
@@ -50,7 +50,7 @@ struct AnimatedEntitiesBucket
     static constexpr uint32_t MaxEntries = 2048;
 
     HashMap<ent::EntityID, uint32_t> entityIDs;                              // 00
-    StaticArray<anim::AnimatedEntityData*, MaxEntries> animatedEntitiesData; // 30
+    StaticArray<anim::AnimatedObject*, MaxEntries> animatedEntitiesData;     // 30
     StaticArray<Box, MaxEntries> animationBounds;                            // 4090
     StaticArray<ent::AnimatedComponent*, MaxEntries> animatedComponents;     // 140A0
     StaticArray<Handle<ent::Entity>, MaxEntries> entities;                   // 180A8
