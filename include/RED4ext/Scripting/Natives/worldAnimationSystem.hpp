@@ -50,15 +50,13 @@ struct AnimatedEntitiesBucket
     static constexpr uint32_t MaxEntries = 2048;
 
     HashMap<ent::EntityID, uint32_t> entityIDs;                              // 00
-    StaticArray<anim::AnimatedObject*, MaxEntries> animatedEntitiesData;     // 30
+    StaticArray<anim::AnimatedObject*, MaxEntries> animatedObjects;          // 30
     StaticArray<Box, MaxEntries> animationBounds;                            // 4090
     StaticArray<ent::AnimatedComponent*, MaxEntries> animatedComponents;     // 140A0
     StaticArray<Handle<ent::Entity>, MaxEntries> entities;                   // 180A8
     StaticArray<componentBindings, MaxEntries> componentBindings;            // 200B0
 
-    struct unkStruct { uint32_t unk; };
-
-    StaticArray<unkStruct, MaxEntries> unk2C0B8;                            // 2C0B8
+    StaticArray<uint32_t, MaxEntries> unkStaticArray;                        // 2C0B8
     uint64_t unk2E0C0[0x2E0E0 - 0x2E0C0];                                   // 2E0C0
 };
 RED4EXT_ASSERT_SIZE(AnimatedEntitiesBucket, 0x2E170);
@@ -82,7 +80,7 @@ struct __declspec(align(0x10)) AnimationSystem : world::IRuntimeSystem
     uint8_t unk8A600[0xA2948 - 0x8A5D0];                                // 8A600
     RagdollEntitiesBucket ragdollEntities;                              // A2948
     uint8_t unkAA958[0xAAA00 - 0xAA958];                                // AA958
-    uint64_t globalTimeMS;                                              // AAA00 - milliseconds                              
+    uint64_t globalTimeMS;                                              // AAA00 - milliseconds
     double globalTimeS;                                                 // AAA08 - seconds
     uint8_t unkAAA10[0xB2AE8 - 0xAAA10];                                // AAA10
     RuntimeSystemRendering* renderingSystem;                            // B2AF0
