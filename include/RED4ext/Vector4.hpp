@@ -12,11 +12,19 @@ struct __declspec(align(0x10)) Vector4
     static constexpr const char* NAME = "Vector4";
     static constexpr const char* ALIAS = NAME;
 
-    Vector4() : X(0), Y(0), Z(0), W(0)
+    Vector4()
+        : X(0)
+        , Y(0)
+        , Z(0)
+        , W(0)
     {
     }
 
-    Vector4(float x, float y, float z, float w) : X(x), Y(y), Z(z), W(w)
+    Vector4(float x, float y, float z, float w)
+        : X(x)
+        , Y(y)
+        , Z(z)
+        , W(w)
     {
     }
 
@@ -47,12 +55,12 @@ struct __declspec(align(0x10)) Vector4
 
     inline Vector4 operator*(const float aScale) const
     {
-        return {X*aScale, Y*aScale, Z*aScale, W*aScale};
+        return {X * aScale, Y * aScale, Z * aScale, W * aScale};
     }
 
     inline Vector4 operator*(const Vector4& aOther) const
     {
-        return {X*aOther.X, Y*aOther.Y, Z*aOther.Z, W*aOther.W};
+        return {X * aOther.X, Y * aOther.Y, Z * aOther.Z, W * aOther.W};
     }
 
     inline bool operator==(const Vector4& aOther) const
@@ -67,7 +75,7 @@ struct __declspec(align(0x10)) Vector4
 
     inline float Magnitude() const
     {
-        return std::sqrt(X*X + Y*Y + Z*Z + W*W);
+        return std::sqrt(X * X + Y * Y + Z * Z + W * W);
     }
 
     inline void Normalize()
@@ -76,7 +84,7 @@ struct __declspec(align(0x10)) Vector4
 
         if (mag != 0) // prevent divide by zero
         {
-            const float invertedMag = 1.f/mag; // invert magnitude so we only divide once
+            const float invertedMag = 1.f / mag; // invert magnitude so we only divide once
 
             X *= invertedMag;
             Y *= invertedMag;
@@ -96,16 +104,13 @@ struct __declspec(align(0x10)) Vector4
 
     inline float Dot(const Vector4& aOther) const
     {
-        return X*aOther.X + Y*aOther.Y + Z*aOther.Z + W*aOther.W;
+        return X * aOther.X + Y * aOther.Y + Z * aOther.Z + W * aOther.W;
     }
 
     inline Vector4 Cross(const Vector4& aOther) const
     {
-        return
-        {
-            Y * aOther.Z - Z * aOther.Y,
-            Z * aOther.X - X * aOther.Z,
-            X * aOther.Y - Y * aOther.X,
+        return {
+            Y * aOther.Z - Z * aOther.Y, Z * aOther.X - X * aOther.Z, X * aOther.Y - Y * aOther.X,
             0.f // W is ignored for cross of Vector4
         };
     }
