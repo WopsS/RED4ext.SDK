@@ -12,11 +12,17 @@ struct Vector3
     static constexpr const char* NAME = "Vector3";
     static constexpr const char* ALIAS = NAME;
 
-    Vector3() : X(0), Y(0), Z(0)
+    Vector3()
+        : X(0)
+        , Y(0)
+        , Z(0)
     {
     }
 
-    Vector3(float x, float y, float z) : X(x), Y(y), Z(z)
+    Vector3(float x, float y, float z)
+        : X(x)
+        , Y(y)
+        , Z(z)
     {
     }
 
@@ -46,12 +52,12 @@ struct Vector3
 
     inline Vector3 operator*(const float aScale) const
     {
-        return {X*aScale, Y*aScale, Z*aScale};
+        return {X * aScale, Y * aScale, Z * aScale};
     }
 
     inline Vector3 operator*(const Vector3& aOther) const
     {
-        return {X*aOther.X, Y*aOther.Y, Z*aOther.Z};
+        return {X * aOther.X, Y * aOther.Y, Z * aOther.Z};
     }
 
     inline bool operator==(const Vector3& aOther) const
@@ -66,7 +72,7 @@ struct Vector3
 
     inline float Magnitude() const
     {
-        return std::sqrt(X*X + Y*Y + Z*Z);
+        return std::sqrt(X * X + Y * Y + Z * Z);
     }
 
     inline void Normalize()
@@ -75,7 +81,7 @@ struct Vector3
 
         if (mag != 0) // prevent divide by zero
         {
-            const float invertedMag = 1.f/mag; // invert magnitude so we only divide once
+            const float invertedMag = 1.f / mag; // invert magnitude so we only divide once
 
             X *= invertedMag;
             Y *= invertedMag;
@@ -94,16 +100,13 @@ struct Vector3
 
     inline float Dot(const Vector3& aOther) const
     {
-        return X*aOther.X + Y*aOther.Y + Z*aOther.Z;
+        return X * aOther.X + Y * aOther.Y + Z * aOther.Z;
     }
 
     inline Vector3 Cross(const Vector3& aOther) const
     {
-        return
-        {
-            Y * aOther.Z - Z * aOther.Y,
-            Z * aOther.X - X * aOther.Z,
-            X * aOther.Y - Y * aOther.X
+        return {
+            Y * aOther.Z - Z * aOther.Y, Z * aOther.X - X * aOther.Z, X * aOther.Y - Y * aOther.X
         };
     }
 
