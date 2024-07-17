@@ -12,11 +12,15 @@ struct Vector2
     static constexpr const char* NAME = "Vector2";
     static constexpr const char* ALIAS = NAME;
 
-    Vector2() : X(0), Y(0)
+    Vector2()
+        : X(0)
+        , Y(0)
     {
     }
 
-    Vector2(float x, float y) : X(x), Y(y)
+    Vector2(float x, float y)
+        : X(x)
+        , Y(y)
     {
     }
 
@@ -45,12 +49,12 @@ struct Vector2
 
     inline Vector2 operator*(const float aScale) const
     {
-        return {X*aScale, Y*aScale};
+        return {X * aScale, Y * aScale};
     }
 
     inline Vector2 operator*(const Vector2& aOther) const
     {
-        return {X*aOther.X, Y*aOther.Y};
+        return {X * aOther.X, Y * aOther.Y};
     }
 
     inline bool operator==(const Vector2& aOther) const
@@ -65,7 +69,7 @@ struct Vector2
 
     inline float Magnitude() const
     {
-        return std::sqrt(X*X + Y*Y);
+        return std::sqrt(X * X + Y * Y);
     }
 
     inline void Normalize()
@@ -74,7 +78,7 @@ struct Vector2
 
         if (mag != 0) // prevent divide by zero
         {
-            const float invertedMag = 1.f/mag; // invert magnitude so we only divide once
+            const float invertedMag = 1.f / mag; // invert magnitude so we only divide once
 
             X *= invertedMag;
             Y *= invertedMag;
@@ -92,7 +96,7 @@ struct Vector2
 
     inline float Dot(const Vector2& aOther) const
     {
-        return X*aOther.X + Y*aOther.Y;
+        return X * aOther.X + Y * aOther.Y;
     }
 
     inline float Cross(const Vector2& aOther) const
