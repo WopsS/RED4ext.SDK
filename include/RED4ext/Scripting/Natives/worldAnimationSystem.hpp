@@ -57,7 +57,7 @@ struct AnimatedEntitiesBucket
     StaticArray<componentBindings, MaxEntries> componentBindings;            // 200B0
 
     StaticArray<uint32_t, MaxEntries> unkStaticArray;                        // 2C0B8
-    uint64_t unk2E0C0[0x2E0E0 - 0x2E0C0];                                   // 2E0C0
+    uint64_t unk2E0C0[0x2E0E0 - 0x2E0C0];                                    // 2E0C0
 };
 RED4EXT_ASSERT_SIZE(AnimatedEntitiesBucket, 0x2E170);
 
