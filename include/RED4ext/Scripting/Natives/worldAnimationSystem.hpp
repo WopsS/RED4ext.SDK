@@ -3,8 +3,8 @@
 #include <RED4ext/Common.hpp>
 #include <RED4ext/HashMap.hpp>
 #include <RED4ext/NativeTypes.hpp>
-#include <RED4ext/Scripting/Natives/AnimMetaRig.hpp>
 #include <RED4ext/Scripting/Natives/AnimAnimatedObject.hpp>
+#include <RED4ext/Scripting/Natives/AnimMetaRig.hpp>
 #include <RED4ext/Scripting/Natives/Generated/Box.hpp>
 #include <RED4ext/Scripting/Natives/Generated/appearance/AppearanceResource.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/RagdollComponent.hpp>
@@ -18,12 +18,15 @@ namespace RED4ext
 {
 namespace ent
 {
-    struct AnimatedComponent;
-    struct EntityID;
-    struct IPlacedComponent;
-    struct ITransformAttachment;
+struct AnimatedComponent;
+struct EntityID;
+struct IPlacedComponent;
+struct ITransformAttachment;
+} // namespace ent
+namespace anim 
+{ 
+struct AnimSetupResource; 
 }
-namespace anim { struct AnimSetupResource; }
 
 namespace world
 {
@@ -36,7 +39,7 @@ struct AnimatedEntitiesBucket
     {
         struct Binding
         {
-            Handle<ent::IPlacedComponent> placedComponent;         // 00 
+            Handle<ent::IPlacedComponent> placedComponent;         // 00
             ent::AnimatedComponent* animComponent;                 // 10
             Handle<ent::ITransformAttachment> transformAttachment; // 18
         };
@@ -49,15 +52,14 @@ struct AnimatedEntitiesBucket
 
     static constexpr uint32_t MaxEntries = 2048;
 
-    HashMap<ent::EntityID, uint32_t> entityIDs;                              // 00
-    StaticArray<anim::AnimatedObject*, MaxEntries> animatedObjects;          // 30
-    StaticArray<Box, MaxEntries> animationBounds;                            // 4090
-    StaticArray<ent::AnimatedComponent*, MaxEntries> animatedComponents;     // 140A0
-    StaticArray<Handle<ent::Entity>, MaxEntries> entities;                   // 180A8
-    StaticArray<ComponentBindings, MaxEntries> componentBindings;            // 200B0
-
-    StaticArray<uint32_t, MaxEntries> unkStaticArray;                        // 2C0B8
-    uint64_t unk2E0C0[0x2E0E0 - 0x2E0C0];                                    // 2E0C0
+    HashMap<ent::EntityID, uint32_t> entityIDs;                          // 00
+    StaticArray<anim::AnimatedObject*, MaxEntries> animatedObjects;      // 30
+    StaticArray<Box, MaxEntries> animationBounds;                        // 4090
+    StaticArray<ent::AnimatedComponent*, MaxEntries> animatedComponents; // 140A0
+    StaticArray<Handle<ent::Entity>, MaxEntries> entities;               // 180A8
+    StaticArray<ComponentBindings, MaxEntries> componentBindings;        // 200B0
+    StaticArray<uint32_t, MaxEntries> unkStaticArray;                    // 2C0B8
+    uint64_t unk2E0C0[0x2E0E0 - 0x2E0C0];                                // 2E0C0
 };
 RED4EXT_ASSERT_SIZE(AnimatedEntitiesBucket, 0x2E170);
 
