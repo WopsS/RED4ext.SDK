@@ -103,9 +103,7 @@ struct Vector3
 
     inline Vector3 Cross(const Vector3& aOther) const
     {
-        return {
-            Y * aOther.Z - Z * aOther.Y, Z * aOther.X - X * aOther.Z, X * aOther.Y - Y * aOther.X
-        };
+        return {Y * aOther.Z - Z * aOther.Y, Z * aOther.X - X * aOther.Z, X * aOther.Y - Y * aOther.X};
     }
 
     float X; // 00
