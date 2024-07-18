@@ -32,20 +32,20 @@ struct RuntimeSystemRendering;
 
 struct AnimatedEntitiesBucket
 {
-    struct componentBindings
+    struct ComponentBindings
     {
-        struct binding
+        struct Binding
         {
             Handle<ent::IPlacedComponent> placedComponent;         // 00 
             ent::AnimatedComponent* animComponent;                 // 10
             Handle<ent::ITransformAttachment> transformAttachment; // 18
         };
-        RED4EXT_ASSERT_SIZE(binding, 0x28);
+        RED4EXT_ASSERT_SIZE(Binding, 0x28);
 
-        DynArray<binding> bindings; // 00
+        DynArray<Binding> bindings; // 00
         uint64_t unk10;             // 10
     };
-    RED4EXT_ASSERT_SIZE(componentBindings, 0x18);
+    RED4EXT_ASSERT_SIZE(ComponentBindings, 0x18);
 
     static constexpr uint32_t MaxEntries = 2048;
 
@@ -54,7 +54,7 @@ struct AnimatedEntitiesBucket
     StaticArray<Box, MaxEntries> animationBounds;                            // 4090
     StaticArray<ent::AnimatedComponent*, MaxEntries> animatedComponents;     // 140A0
     StaticArray<Handle<ent::Entity>, MaxEntries> entities;                   // 180A8
-    StaticArray<componentBindings, MaxEntries> componentBindings;            // 200B0
+    StaticArray<ComponentBindings, MaxEntries> componentBindings;            // 200B0
 
     StaticArray<uint32_t, MaxEntries> unkStaticArray;                        // 2C0B8
     uint64_t unk2E0C0[0x2E0E0 - 0x2E0C0];                                    // 2E0C0
