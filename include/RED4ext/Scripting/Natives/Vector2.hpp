@@ -2,8 +2,6 @@
 
 #include <cstdint>
 #include <RED4ext/Common.hpp>
-#include <RED4ext/Vector2.hpp>
-#include <RED4ext/Vector4.hpp>
 
 namespace RED4ext
 {
@@ -102,16 +100,6 @@ struct Vector2
     inline float Cross(const Vector2& aOther) const
     {
         return X * aOther.Y - Y * aOther.X;
-    }
-
-    inline Vector3 AsVector3() const
-    {
-        return Vector3(X, Y, 0);
-    }
-
-    inline Vector4 AsVector4() const
-    {
-        return Vector4(X, Y, 0, 0);
     }
 
     float X; // 00
