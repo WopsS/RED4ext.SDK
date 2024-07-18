@@ -2,8 +2,6 @@
 
 #include <cstdint>
 #include <RED4ext/Common.hpp>
-#include <RED4ext/Vector2.hpp>
-#include <RED4ext/Vector3.hpp>
 
 namespace RED4ext
 {
@@ -113,16 +111,6 @@ struct __declspec(align(0x10)) Vector4
             Y * aOther.Z - Z * aOther.Y, Z * aOther.X - X * aOther.Z, X * aOther.Y - Y * aOther.X,
             0.f // W is ignored for cross of Vector4
         };
-    }
-
-    inline Vector2 AsVector2() const
-    {
-        return Vector2(X, Y);
-    }
-
-    inline Vector3 AsVector3() const
-    {
-        return Vector3(X, Y, Z);
     }
 
     float X; // 00
