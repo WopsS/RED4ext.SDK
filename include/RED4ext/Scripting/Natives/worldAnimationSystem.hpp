@@ -24,8 +24,8 @@ struct IPlacedComponent;
 struct ITransformAttachment;
 } // namespace ent
 namespace anim
-{ 
-struct AnimSetupResource; 
+{
+struct AnimSetupResource;
 }
 
 namespace world
