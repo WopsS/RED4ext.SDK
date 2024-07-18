@@ -23,7 +23,7 @@ struct EntityID;
 struct IPlacedComponent;
 struct ITransformAttachment;
 } // namespace ent
-namespace anim 
+namespace anim
 { 
 struct AnimSetupResource; 
 }
