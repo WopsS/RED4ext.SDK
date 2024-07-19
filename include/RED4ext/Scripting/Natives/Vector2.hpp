@@ -24,7 +24,7 @@ struct Vector2
 
     inline Vector2& operator=(const Vector2& aOther)
     {
-        if (this != std::addressof(aOther)
+        if (this != std::addressof(aOther))
         {
             X = aOther.X;
             Y = aOther.Y;
