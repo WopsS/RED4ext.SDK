@@ -17,8 +17,8 @@ struct Vector2
     }
 
     Vector2(float aX, float aY)
-        : X(x)
-        , Y(y)
+        : X(aX)
+        , Y(aY)
     {
     }
 
