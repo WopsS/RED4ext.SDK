@@ -26,9 +26,12 @@ struct Vector3
 
     inline Vector3& operator=(const Vector3& aOther)
     {
-        X = aOther.X;
-        Y = aOther.Y;
-        Z = aOther.Z;
+        if (this != std::addressof(aOther))
+        {
+            X = aOther.X;
+            Y = aOther.Y;
+            Z = aOther.Z;
+        }
 
         return *this;
     }
