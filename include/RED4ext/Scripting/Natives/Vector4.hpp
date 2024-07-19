@@ -28,10 +28,13 @@ struct Vector4
 
     inline Vector4& operator=(const Vector4& aOther)
     {
-        X = aOther.X;
-        Y = aOther.Y;
-        Z = aOther.Z;
-        W = aOther.W;
+        if (this != std::addressof(aOther))
+        {
+            X = aOther.X;
+            Y = aOther.Y;
+            Z = aOther.Z;
+            W = aOther.W;
+        }
 
         return *this;
     }
