@@ -69,7 +69,7 @@ struct RagdollEntitiesBucket
     StaticArray<ent::RagdollComponent*, 2048> ragdollComponents; // A6950
 };
 
-struct __declspec(align(0x10)) AnimationSystem : world::IRuntimeSystem
+struct AnimationSystem : world::IRuntimeSystem
 {
     static constexpr const char* NAME = "worldAnimationSystem";
     static constexpr const char* ALIAS = NAME;
