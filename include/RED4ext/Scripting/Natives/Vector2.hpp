@@ -16,7 +16,7 @@ struct Vector2
     {
     }
 
-    Vector2(float x, float y)
+    Vector2(float aX, float aY)
         : X(x)
         , Y(y)
     {
@@ -24,8 +24,11 @@ struct Vector2
 
     inline Vector2& operator=(const Vector2& aOther)
     {
-        X = aOther.X;
-        Y = aOther.Y;
+        if (this != std::addressof(aOther)
+        {
+            X = aOther.X;
+            Y = aOther.Y;
+        }
 
         return *this;
     }
@@ -45,9 +48,9 @@ struct Vector2
         return {X - aOther.X, Y - aOther.Y};
     }
 
-    inline Vector2 operator*(const float aScale) const
+    inline Vector2 operator*(const float aScalar) const
     {
-        return {X * aScale, Y * aScale};
+        return {X * aScalar, Y * aScalar};
     }
 
     inline Vector2 operator*(const Vector2& aOther) const
@@ -62,7 +65,7 @@ struct Vector2
 
     inline bool operator!=(const Vector2& aOther) const
     {
-        return !operator==(aOther);
+        return !(*this == aOther);
     }
 
     inline float Magnitude() const
@@ -81,15 +84,6 @@ struct Vector2
             X *= invertedMag;
             Y *= invertedMag;
         }
-    }
-
-    inline Vector2 AsNormalized() const
-    {
-        auto copyVec = *this;
-
-        copyVec.Normalize();
-
-        return copyVec;
     }
 
     inline float Dot(const Vector2& aOther) const
