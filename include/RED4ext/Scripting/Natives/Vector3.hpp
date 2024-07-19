@@ -17,10 +17,10 @@ struct Vector3
     {
     }
 
-    Vector3(float x, float y, float z)
-        : X(x)
-        , Y(y)
-        , Z(z)
+    Vector3(float aX, float aY, float aZ)
+        : X(aX)
+        , Y(aY)
+        , Z(aZ)
     {
     }
 
@@ -48,9 +48,9 @@ struct Vector3
         return {X - aOther.X, Y - aOther.Y, Z - aOther.Z};
     }
 
-    inline Vector3 operator*(const float aScale) const
+    inline Vector3 operator*(const float aScalar) const
     {
-        return {X * aScale, Y * aScale, Z * aScale};
+        return {X * aScalar, Y * aScalar, Z * aScalar};
     }
 
     inline Vector3 operator*(const Vector3& aOther) const
@@ -65,7 +65,7 @@ struct Vector3
 
     inline bool operator!=(const Vector3& aOther) const
     {
-        return !operator==(aOther);
+        return !(*this == aOther);
     }
 
     inline float Magnitude() const
@@ -85,15 +85,6 @@ struct Vector3
             Y *= invertedMag;
             Z *= invertedMag;
         }
-    }
-
-    inline Vector3 AsNormalized() const
-    {
-        auto copyVec = *this;
-
-        copyVec.Normalize();
-
-        return copyVec;
     }
 
     inline float Dot(const Vector3& aOther) const
