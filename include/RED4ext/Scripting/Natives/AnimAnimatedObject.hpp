@@ -10,7 +10,7 @@ namespace anim
 {
 struct AnimatedObject // This name might be wrong, it's an inference based on context
 {
-    uint64_t metaRigID;
+    uint64_t metaRigID;             // 00
     anim::MetaRig* metaRig;         // 08
     anim::MetaRigInfo* metaRigInfo; // 10
     uint8_t unk18[0x98 - 0x18];     // 18
