@@ -18,11 +18,11 @@ struct __declspec(align(0x10)) Vector4
     {
     }
 
-    Vector4(float x, float y, float z, float w)
-        : X(x)
-        , Y(y)
-        , Z(z)
-        , W(w)
+    Vector4(float aX, float aY, float aZ, float aW)
+        : X(aX)
+        , Y(aY)
+        , Z(aZ)
+        , W(aW)
     {
     }
 
@@ -51,9 +51,9 @@ struct __declspec(align(0x10)) Vector4
         return {X - aOther.X, Y - aOther.Y, Z - aOther.Z, W - aOther.W};
     }
 
-    inline Vector4 operator*(const float aScale) const
+    inline Vector4 operator*(const float aScalar) const
     {
-        return {X * aScale, Y * aScale, Z * aScale, W * aScale};
+        return {X * aScalar, Y * aScalar, Z * aScalar, W * aScalar};
     }
 
     inline Vector4 operator*(const Vector4& aOther) const
@@ -68,7 +68,7 @@ struct __declspec(align(0x10)) Vector4
 
     inline bool operator!=(const Vector4& aOther) const
     {
-        return !operator==(aOther);
+        return !(*this == aOther);
     }
 
     inline float Magnitude() const
@@ -89,15 +89,6 @@ struct __declspec(align(0x10)) Vector4
             Z *= invertedMag;
             W *= invertedMag;
         }
-    }
-
-    inline Vector4 AsNormalized() const
-    {
-        auto copyVec = *this;
-
-        copyVec.Normalize();
-
-        return copyVec;
     }
 
     inline float Dot(const Vector4& aOther) const
