@@ -68,6 +68,7 @@ struct RagdollEntitiesBucket
     StaticArray<anim::Rig*, 2048> rigs;                          // A2948
     StaticArray<ent::RagdollComponent*, 2048> ragdollComponents; // A6950
 };
+RED4EXT_ASSERT_SIZE(RagdollEntitiesBucket, 0x8010);
 
 struct AnimationSystem : world::IRuntimeSystem
 {
