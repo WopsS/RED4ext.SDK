@@ -1,6 +1,6 @@
 #pragma once
 
-#include <RED4ext/Scripting/Natives/AnimMetaRig.hpp>
+#include <RED4ext/Scripting/Natives/animMetaRig.hpp>
 #include <RED4ext/Scripting/Natives/Generated/Box.hpp>
 #include <cstdint>
 
