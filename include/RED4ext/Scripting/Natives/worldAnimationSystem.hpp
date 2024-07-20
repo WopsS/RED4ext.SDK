@@ -3,8 +3,8 @@
 #include <RED4ext/Common.hpp>
 #include <RED4ext/HashMap.hpp>
 #include <RED4ext/NativeTypes.hpp>
-#include <RED4ext/Scripting/Natives/AnimAnimatedObject.hpp>
-#include <RED4ext/Scripting/Natives/AnimMetaRig.hpp>
+#include <RED4ext/Scripting/Natives/animAnimatedObject.hpp>
+#include <RED4ext/Scripting/Natives/animMetaRig.hpp>
 #include <RED4ext/Scripting/Natives/Generated/Box.hpp>
 #include <RED4ext/Scripting/Natives/Generated/appearance/AppearanceResource.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/RagdollComponent.hpp>
