@@ -26,6 +26,22 @@ struct Vector4
     {
     }
 
+    Vector4(Vector3& aVector3)
+        : X(aVector3.X)
+        , Y(aVector3.Y)
+        , Z(aVector3.Z)
+        , W(1)
+    {
+    }
+
+    Vector4(Vector2& aVector2)
+        : X(aVector2.X)
+        , Y(aVector2.Y)
+        , Z(0)
+        , W(1)
+    {
+    }
+
     inline Vector4& operator=(const Vector4& aOther)
     {
         if (this != std::addressof(aOther))
