@@ -22,6 +22,18 @@ struct Vector2
     {
     }
 
+    Vector2(Vector3& aVector3)
+        : X(aVector3.X)
+        , Y(aVector3.Y)
+    {
+    }
+
+    Vector2(Vector4& aVector4)
+        : X(aVector4.X)
+        , Y(aVector4.Y)
+    {
+    }
+
     inline Vector2& operator=(const Vector2& aOther)
     {
         if (this != std::addressof(aOther))
@@ -60,7 +72,9 @@ struct Vector2
 
     inline bool operator==(const Vector2& aOther) const
     {
-        return X == aOther.X && Y == aOther.Y;
+        constexpr float tolerance = 1e-3f; // tolerance epsilon for floating point imprecision
+
+        return std::abs(X - aOther.X) < tolerance && std::abs(Y - aOther.Y) < tolerance;
     }
 
     inline bool operator!=(const Vector2& aOther) const
@@ -70,7 +84,7 @@ struct Vector2
 
     inline float Magnitude() const
     {
-        return std::sqrt(X * X + Y * Y);
+        return std::sqrtf(X * X + Y * Y);
     }
 
     inline void Normalize()
