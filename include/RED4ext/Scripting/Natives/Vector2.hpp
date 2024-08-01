@@ -1,6 +1,8 @@
 #pragma once
 
 #include <RED4ext/Common.hpp>
+#include <RED4ext/Scripting/Natives/Vector3.hpp>
+#include <RED4ext/Scripting/Natives/Vector4.hpp>
 #include <cstdint>
 
 namespace RED4ext
