@@ -66,7 +66,10 @@ struct Vector4
 
     inline bool operator==(const Vector4& aOther) const
     {
-        return X == aOther.X && Y == aOther.Y && Z == aOther.Z && W == aOther.W;
+        constexpr float tolerance = 1e-3f; // tolerance epsilon for floating point imprecision
+    
+        return std::abs(X - aOther.X) < tolerance && std::abs(Y - aOther.Y) < tolerance &&
+               std::abs(Z - aOther.Z) < tolerance && std::abs(W - aOther.W) < tolerance;
     }
 
     inline bool operator!=(const Vector4& aOther) const
@@ -76,7 +79,7 @@ struct Vector4
 
     inline float Magnitude() const
     {
-        return std::sqrt(X * X + Y * Y + Z * Z + W * W);
+        return std::sqrtf(X * X + Y * Y + Z * Z + W * W);
     }
 
     inline void Normalize()
@@ -105,6 +108,16 @@ struct Vector4
             Y * aOther.Z - Z * aOther.Y, Z * aOther.X - X * aOther.Z, X * aOther.Y - Y * aOther.X,
             0.f // W is ignored for cross of Vector4
         };
+    }
+
+    inline Vector3& AsVector3()
+    {
+        return reinterpret_cast<Vector3&>(*this);
+    }
+    
+    inline Vector2& AsVector2()
+    {
+        return reinterpret_cast<Vector2&>(*this);
     }
 
     float X; // 00
