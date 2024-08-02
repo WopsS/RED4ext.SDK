@@ -1,8 +1,6 @@
 #pragma once
 
 #include <RED4ext/Common.hpp>
-#include <RED4ext/Scripting/Natives/Vector3.hpp>
-#include <RED4ext/Scripting/Natives/Vector4.hpp>
 #include <cstdint>
 
 namespace RED4ext
@@ -21,18 +19,6 @@ struct Vector2
     Vector2(float aX, float aY)
         : X(aX)
         , Y(aY)
-    {
-    }
-
-    Vector2(Vector3& aVector3)
-        : X(aVector3.X)
-        , Y(aVector3.Y)
-    {
-    }
-
-    Vector2(Vector4& aVector4)
-        : X(aVector4.X)
-        , Y(aVector4.Y)
     {
     }
 
