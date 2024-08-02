@@ -1,8 +1,6 @@
 #pragma once
 
 #include <RED4ext/Common.hpp>
-#include <RED4ext/Scripting/Natives/Vector2.hpp>
-#include <RED4ext/Scripting/Natives/Vector3.hpp>
 #include <cstdint>
 
 namespace RED4ext
@@ -25,22 +23,6 @@ struct Vector4
         , Y(aY)
         , Z(aZ)
         , W(aW)
-    {
-    }
-
-    Vector4(Vector3& aVector3)
-        : X(aVector3.X)
-        , Y(aVector3.Y)
-        , Z(aVector3.Z)
-        , W(1)
-    {
-    }
-
-    Vector4(Vector2& aVector2)
-        : X(aVector2.X)
-        , Y(aVector2.Y)
-        , Z(0)
-        , W(1)
     {
     }
 
@@ -126,16 +108,6 @@ struct Vector4
             Y * aOther.Z - Z * aOther.Y, Z * aOther.X - X * aOther.Z, X * aOther.Y - Y * aOther.X,
             0.f // W is ignored for cross of Vector4
         };
-    }
-
-    inline Vector3& AsVector3()
-    {
-        return reinterpret_cast<Vector3&>(*this);
-    }
-    
-    inline Vector2& AsVector2()
-    {
-        return reinterpret_cast<Vector2&>(*this);
     }
 
     float X; // 00
