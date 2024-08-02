@@ -63,11 +63,7 @@ struct Vector3
 
     inline bool operator==(const Vector3& aOther) const
     {
-        constexpr float tolerance = 1e-3f; // tolerance epsilon for floating point imprecision
-
-        return std::abs(X - aOther.X) < tolerance && std::abs(Y - aOther.Y) < tolerance &&
-               std::abs(Z - aOther.Z) < tolerance;
-    }
+        return X == aOther.X && Y == aOther.Y && Z == aOther.Z;
     }
 
     inline bool operator!=(const Vector3& aOther) const
