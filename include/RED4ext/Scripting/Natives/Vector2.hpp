@@ -60,9 +60,7 @@ struct Vector2
 
     inline bool operator==(const Vector2& aOther) const
     {
-        constexpr float tolerance = 1e-3f; // tolerance epsilon for floating point imprecision
-
-        return std::abs(X - aOther.X) < tolerance && std::abs(Y - aOther.Y) < tolerance;
+        return X == aOther.X && Y == aOther.Y;
     }
 
     inline bool operator!=(const Vector2& aOther) const
