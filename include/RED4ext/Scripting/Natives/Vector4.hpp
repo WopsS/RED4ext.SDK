@@ -66,10 +66,7 @@ struct Vector4
 
     inline bool operator==(const Vector4& aOther) const
     {
-        constexpr float tolerance = 1e-3f; // tolerance epsilon for floating point imprecision
-    
-        return std::abs(X - aOther.X) < tolerance && std::abs(Y - aOther.Y) < tolerance &&
-               std::abs(Z - aOther.Z) < tolerance && std::abs(W - aOther.W) < tolerance;
+        return X == aOther.X && Y == aOther.Y && Z == aOther.Z && W == aOther.W;
     }
 
     inline bool operator!=(const Vector4& aOther) const
@@ -79,7 +76,7 @@ struct Vector4
 
     inline float Magnitude() const
     {
-        return std::sqrtf(X * X + Y * Y + Z * Z + W * W);
+        return std::sqrt(X * X + Y * Y + Z * Z + W * W);
     }
 
     inline void Normalize()
