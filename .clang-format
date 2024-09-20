@@ -9,5 +9,6 @@ BreakBeforeBraces: Allman
 BreakConstructorInitializers: BeforeComma
 BreakInheritanceList: BeforeComma
 KeepEmptyLinesAtTheStartOfBlocks: false
+PackConstructorInitializers: Never
 PointerAlignment: Left
 SpaceAfterTemplateKeyword: false

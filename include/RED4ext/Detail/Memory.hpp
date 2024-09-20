@@ -1,16 +1,21 @@
 #pragma once
 
+#include <cstdint>
 #include <type_traits>
 
 namespace RED4ext
 {
 namespace Memory
 {
+struct PoolInfo;
 struct IAllocator;
-}
+} // namespace Memory
 
 namespace Detail
 {
+template<typename T>
+concept IsPointer = std::is_pointer_v<T>;
+
 template<typename T>
 struct AllocatorHook : std::false_type
 {
@@ -80,5 +85,28 @@ concept IsSafeDestructible = std::is_destructible_v<T> &&
 
 template<typename T>
 concept IsAllocator = std::is_base_of_v<Memory::IAllocator, T>;
+
+template<typename T, typename size_type = std::allocator_traits<T>::size_type,
+         typename alignment_type = T::alignment_type, typename allocation_result_type = T::allocation_result_type>
+concept IsAllocator_New = requires(T t)
+{
+    // clang-format off
+    { t.AllocateAtLeast(std::declval<size_type>()) } -> std::same_as<allocation_result_type>;
+    { t.AllocateAtLeast(std::declval<size_type>(), std::declval<alignment_type>()) } -> std::same_as<allocation_result_type>;
+    { t.ReallocateAtLeast(std::declval<const allocation_result_type&>(), std::declval<size_type>()) } -> std::same_as<allocation_result_type>;
+    { t.ReallocateAtLeast(std::declval<const allocation_result_type&>(), std::declval<size_type>(), std::declval<alignment_type>()) } -> std::same_as<allocation_result_type>;
+    { t.Deallocate(std::declval<const allocation_result_type&>()) } -> std::same_as<void>;
+    { t.sub_28(std::declval<void*>()) } -> std::same_as<void>;
+    { t.GetHandle() } -> std::same_as<std::uint32_t>;
+    // clang-format on
+};
+
+template<typename T>
+concept IsMemoryPool = std::is_base_of_v<Memory::PoolInfo, T> && requires(T)
+{
+    // clang-format off
+    { T::Name } -> std::convertible_to<const char*>;
+    // clang-format on
+};
 } // namespace Detail
 } // namespace RED4ext

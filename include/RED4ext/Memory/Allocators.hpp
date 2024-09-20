@@ -1,7 +1,16 @@
 #pragma once
 
 #include <cstdint>
+#include <functional>
+#include <limits>
+#include <new>
 #include <type_traits>
+
+#include <RED4ext/Detail/Memory.hpp>
+#include <RED4ext/Memory/Pools.hpp>
+#include <RED4ext/Memory/Vault.hpp>
+
+////////////////////////////////////
 
 #include <RED4ext/Addresses.hpp>
 #include <RED4ext/Common.hpp>
@@ -10,8 +19,330 @@
 
 namespace RED4ext
 {
+template<typename T>
+requires Detail::IsPointer<T>
+struct [[nodiscard]] AllocationResult
+{
+    constexpr AllocationResult(T aPtr = nullptr, std::size_t aCount = 0) noexcept
+        : ptr(aPtr)
+        , count(aCount)
+    {
+    }
+
+    constexpr AllocationResult(const AllocationResult&) noexcept = default;
+    constexpr AllocationResult(AllocationResult&&) noexcept = default;
+
+    constexpr AllocationResult& operator=(const AllocationResult&) noexcept = default;
+    constexpr AllocationResult& operator=(AllocationResult&&) noexcept = default;
+
+    constexpr ~AllocationResult() noexcept = default;
+
+    T ptr;
+    std::size_t count;
+};
+RED4EXT_ASSERT_SIZE(AllocationResult<void*>, 0x10);
+
+// https://github.com/oneapi-src/oneTBB/blob/master/include/oneapi/tbb/memory_pool.h
+// https://stackoverflow.com/questions/826569/compelling-examples-of-custom-c-allocators
+// https://stackoverflow.com/questions/657783/how-does-intel-tbbs-scalable-allocator-work
+
+template<typename T, typename P = Memory::PoolDefault>
+requires Detail::IsMemoryPool<P>
+// TODO: Maybe add concept for "IsConst"
+class Allocator
+{
+public:
+    using value_type = T;
+    using pool_type = P;
+
+    using allocation_result_type = AllocationResult<T*>;
+
+    using size_type = std::size_t;
+    using alignment_type = std::uint32_t;
+
+    using difference_type = std::ptrdiff_t;
+
+    using propagate_on_container_move_assignment = std::true_type;
+
+    static_assert(
+        !std::is_const_v<value_type>,
+        "The C++ Standard forbids containers of const elements because RED4ext::Allocator<const T> is ill-formed.");
+
+    constexpr Allocator() noexcept = default;
+    constexpr Allocator(const Allocator&) noexcept = default;
+    constexpr Allocator(Allocator&&) noexcept = default;
+
+    template<typename U>
+    constexpr Allocator(const Allocator<U, P>&) noexcept
+    {
+    }
+
+    constexpr Allocator& operator=(const Allocator&) noexcept = default;
+    constexpr Allocator& operator=(Allocator&&) noexcept = default;
+
+    constexpr ~Allocator() noexcept = default;
+
+    /*
+     * Not using function overloading because then it will be up to the compiler to decide how the vtbl is ordered.
+     * Since we want a specific ordering the preffix "WithAlignment" is added to the functions that contain the
+     * alignment parameter.
+     *
+     * Also all virtual [re]allocation functions are private. If someone wants to allocate exactly N bytes, then they
+     * can use Allocator<char>.
+     */
+
+private:
+    [[nodiscard]] virtual allocation_result_type AllocateAtLeastBytes(size_type aBytes) const
+    {
+        static_assert(sizeof(value_type) > 0,
+                      "The type must be complete before calling 'Allocator::AllocateAtLeastBytes'");
+        return InvokeAllocationFunction<size_type>(Addresses::Memory_Vault_Alloc, aBytes,
+                                                   [this, aBytes]() { RiseOom(aBytes, 8); });
+    }
+
+    [[nodiscard]] virtual allocation_result_type AllocateAtLeastBytesWithAlignment(size_type aBytes,
+                                                                                   alignment_type aAlignment) const
+    {
+        static_assert(sizeof(value_type) > 0,
+                      "The type must be complete before calling 'Allocator::AllocateAtLeastBytesWithAlignment'");
+        return InvokeAllocationFunction<size_type, alignment_type>(
+            Addresses::Memory_Vault_AllocAligned, aBytes, aAlignment,
+            [this, aBytes, aAlignment]() { RiseOom(aBytes, aAlignment); });
+    }
+
+    [[nodiscard]] virtual allocation_result_type ReallocateAtLeastBytes(
+        const allocation_result_type& aPreviousAllocation, size_type aBytes) const
+    {
+        static_assert(sizeof(value_type) > 0,
+                      "The type must be complete before calling 'Allocator::ReallocateAtLeastBytes'");
+        return InvokeAllocationFunction<const allocation_result_type&, size_type>(Addresses::Memory_Vault_Realloc,
+                                                                                  aPreviousAllocation, aBytes,
+                                                                                  [this, aBytes]()
+                                                                                  {
+                                                                                      if (aBytes)
+                                                                                      {
+                                                                                          RiseOom(aBytes, 8);
+                                                                                      }
+                                                                                  });
+    }
+
+    [[nodiscard]] virtual allocation_result_type ReallocateAtLeastBytesWithAlignment(
+        const allocation_result_type& aPreviousAllocation, size_type aBytes, alignment_type aAlignment) const
+    {
+        static_assert(sizeof(value_type) > 0,
+                      "The type must be complete before calling 'Allocator::ReallocateAtLeastBytesWithAlignment'");
+        return InvokeAllocationFunction<const allocation_result_type&, size_type, alignment_type>(
+            Addresses::Memory_Vault_ReallocAligned, aPreviousAllocation, aBytes, aAlignment,
+            [this, aBytes, aAlignment]()
+            {
+                if (aBytes)
+                {
+                    RiseOom(aBytes, aAlignment);
+                }
+            });
+    }
+
+public:
+    virtual void Deallocate(const allocation_result_type& aPreviousAllocation) const
+    {
+        InvokeGenericFunction<const allocation_result_type&>(Addresses::Memory_Vault_Free, aPreviousAllocation);
+    }
+
+    virtual void sub_28(void* a1) const
+    {
+        InvokeGenericFunction(Addresses::Memory_Vault_Unk1, a1);
+    }
+
+    [[nodiscard]] virtual const std::uint32_t GetHandle() const
+    {
+        auto pool = pool_type::Get();
+        return pool->handle;
+    }
+
+    [[nodiscard]] T* Allocate(size_type aObjects) const
+    {
+        auto result = AllocateAtLeast(aObjects);
+        return result.ptr;
+    }
+
+    [[nodiscard]] T* Allocate(size_type aObjects, alignment_type aAlignment) const
+    {
+        auto result = AllocateAtLeast(aObjects, aAlignment);
+        return result.ptr;
+    }
+
+    [[nodiscard]] allocation_result_type AllocateAtLeast(size_type aObjects) const
+    {
+        auto size = CalculateSize(aObjects);
+        return AllocateAtLeastBytes(size);
+    }
+
+    [[nodiscard]] allocation_result_type AllocateAtLeast(size_type aObjects, alignment_type aAlignment) const
+    {
+        auto size = CalculateSize(aObjects);
+        return AllocateAtLeastBytesWithAlignment(size, aAlignment);
+    }
+
+    [[nodiscard]] T* Reallocate(T* aMemory, size_type aObjects) const
+    {
+        return Reallocate({aMemory, 0}, aObjects);
+    }
+
+    [[nodiscard]] T* Reallocate(const allocation_result_type& aPreviousAllocation, size_type aObjects) const
+    {
+        auto result = ReallocateAtLeast(aPreviousAllocation, aObjects);
+        return result.ptr;
+    }
+
+    [[nodiscard]] T* Reallocate(T* aMemory, size_type aObjects, alignment_type aAlignment) const
+    {
+        return Reallocate({aMemory, 0}, aObjects, aAlignment);
+    }
+
+    [[nodiscard]] T* Reallocate(const allocation_result_type& aPreviousAllocation, size_type aObjects,
+                                alignment_type aAlignment) const
+    {
+        auto result = ReallocateAtLeast(aPreviousAllocation, aObjects, aAlignment);
+        return result.ptr;
+    }
+
+    [[nodiscard]] allocation_result_type ReallocateAtLeast(T* aMemory, size_type aObjects) const
+    {
+        return ReallocateAtLeast({aMemory, 0}, aObjects);
+    }
+
+    [[nodiscard]] allocation_result_type ReallocateAtLeast(const allocation_result_type& aPreviousAllocation,
+                                                           size_type aObjects) const
+    {
+        auto size = CalculateSize(aObjects);
+        return ReallocateAtLeastBytes(aPreviousAllocation, size);
+    }
+
+    [[nodiscard]] allocation_result_type ReallocateAtLeast(T* aMemory, size_type aObjects,
+                                                           alignment_type aAlignment) const
+    {
+        return ReallocateAtLeast({aMemory, 0}, aObjects, aAlignment);
+    }
+
+    [[nodiscard]] allocation_result_type ReallocateAtLeast(const allocation_result_type& aPreviousAllocation,
+                                                           size_type aObjects, alignment_type aAlignment) const
+    {
+        auto size = CalculateSize(aObjects);
+        return ReallocateAtLeastBytesWithAlignment(aPreviousAllocation, size, aAlignment);
+    }
+
+    void Deallocate(T* aMemory) const
+    {
+        Deallocate({aMemory, 0});
+    }
+
+    // TODO: Maybe STL things.
+
+#pragma region STL
+
+    //[[nodiscard]] constexpr T* allocate(std::size_t n);
+    //[[nodiscard]] constexpr std::allocation_result<T*> allocate_at_least(std::size_t n);
+
+#pragma endregion
+
+private:
+    [[nodiscard]] constexpr size_type CalculateSize(size_type aObjects) const
+    {
+        constexpr size_t typeSize = sizeof(T);
+        constexpr size_type maxSize = (std::numeric_limits<std::size_t>::max)() / typeSize;
+
+        if (maxSize < aObjects)
+        {
+            throw std::bad_array_new_length();
+        }
+
+        return aObjects * typeSize;
+    }
+
+    [[nodiscard]] pool_type* GetPool() const
+    {
+        auto vault = Memory::Vault::Get();
+        auto& poolRegistry = vault->poolRegistry;
+
+        static auto pool = poolRegistry.Get<pool_type>(pool_type::Name);
+        return pool;
+    }
+
+    [[nodiscard]] Memory::Vault* GetAllocatorStorage() const
+    {
+        const auto pool = GetPool();
+        return pool->storage->GetAllocatorStorage<Memory::Vault>();
+    }
+
+    /**
+     * @brief Invoke a generic function on the allocator's storage.
+     *
+     * @note Argument types are not using universal reference because it is necessary to control how the parameters are
+     * passed to the real function. We don't want unexpected lvalue references to be used.
+     */
+    template<typename... Args>
+    void InvokeGenericFunction(std::uintptr_t aOffset, Args... aArgs) const
+    {
+        auto storage = GetAllocatorStorage();
+
+        RelocFunc<void (*)(Memory::Vault*, Args...)> func(aOffset);
+        func(storage, std::forward<Args>(aArgs)...);
+    }
+
+    /**
+     * @brief Invoke an allocation function on the allocator's storage.
+     *
+     * @note See notes of InvokeFunction<void>.
+     */
+    template<typename... Args>
+    [[nodiscard]] allocation_result_type InvokeAllocationFunction(std::uintptr_t aOffset, Args... aArgs,
+                                                                  const std::function<void()>& aOomHandler) const
+    {
+        auto storage = GetAllocatorStorage();
+
+        /*
+         * All [re]alloc functions have the following typedef:
+         *  AllocationResult [Re]Alloc(Vault* aVault, [AllocationResult& aPreviousAllocation], uint32_t aSize,
+         *                             [uint32_t aAlignment])
+         *
+         * Because "REDfunc" is using a variable to call them in memory we cannot abuse the __fastcall convention,
+         * thus it is necessary to use the following typedef:
+         *  void [Re]Alloc(Vault* aVault, AllocationResult* aResult, [AllocationResult& aPreviousAllocation],
+         *                 uint32_t aSize, [uint32_t aAlignment])
+         *
+         * Specifing the RDX directly and using void as return type should not cause problems when calling these
+         * functions, doing something else the calls will be ill-formed.
+         */
+        RelocFunc<void (*)(Memory::Vault*, allocation_result_type&, Args...)> func(aOffset);
+
+        allocation_result_type result{};
+        func(storage, result, std::forward<Args>(aArgs)...);
+
+        if (!result.ptr)
+        {
+            aOomHandler();
+        }
+
+        return result;
+    }
+
+    void RiseOom(size_type aSize, alignment_type aAlignment) const
+    {
+        auto pool = GetPool();
+
+        using func_t = void (*)(Memory::PoolStorage*, size_type, alignment_type);
+        RelocFunc<func_t> func(Addresses::Memory_PoolStorage_OOM);
+        func(pool->storage, aSize, aAlignment);
+    }
+};
+RED4EXT_ASSERT_SIZE(Allocator<void*>, 0x8);
+
+// template<class T1, class T2>
+// constexpr bool operator==(const Allocator<T1>& ALhs, const Allocator<T2>& aRhs) noexcept;
+
 namespace Memory
 {
+
 struct AllocationResult
 {
     void* memory;
