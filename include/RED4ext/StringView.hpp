@@ -1,7 +1,7 @@
 #pragma once
 
-#include <RED4ext/Common.hpp>
 #include <RED4ext/CString.hpp>
+#include <RED4ext/Common.hpp>
 
 #include <string_view>
 
@@ -14,28 +14,24 @@ struct StringView
         : ptr(nullptr)
         , len(0u)
     {
-
     }
 
     constexpr StringView(const char* aStr) noexcept
         : ptr(aStr)
         , len(std::char_traits<char>::length(aStr))
     {
-
     }
 
     constexpr StringView(std::string_view aView) noexcept
         : ptr(aView.data())
         , len(static_cast<std::uint32_t>(aView.size()))
     {
-
     }
 
     StringView(const RED4ext::CString& aStr) noexcept
         : ptr(aStr.c_str())
         , len(aStr.Length())
     {
-
     }
 
     constexpr bool IsValid() const noexcept
@@ -50,7 +46,7 @@ struct StringView
 
     constexpr bool operator==(const StringView& aRhs) const noexcept
     {
-        return Length() == aRhs.Length() && std::char_traits<char>::compare(Data(), aRhs.Data(), Length()); 
+        return Length() == aRhs.Length() && std::char_traits<char>::compare(Data(), aRhs.Data(), Length());
     }
 
     constexpr bool operator!=(const StringView& aRhs) const noexcept
@@ -121,5 +117,4 @@ struct StringView
 RED4EXT_ASSERT_SIZE(StringView, 12u);
 RED4EXT_ASSERT_OFFSET(StringView, ptr, 0u);
 RED4EXT_ASSERT_OFFSET(StringView, len, 8u);
-}
-
+} // namespace RED4ext
