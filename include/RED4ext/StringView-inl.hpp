@@ -6,8 +6,6 @@
 
 #include <RED4ext/CString.hpp>
 
-
-
 RED4EXT_INLINE constexpr RED4ext::StringView::StringView() noexcept
     : ptr(nullptr)
     , len(0u)
