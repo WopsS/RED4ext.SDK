@@ -14,13 +14,13 @@ RED4EXT_INLINE constexpr RED4ext::StringView::StringView() noexcept
 
 RED4EXT_INLINE constexpr RED4ext::StringView::StringView(const char* aStr) noexcept
     : ptr(aStr)
-    , len(std::char_traits<char>::length(aStr))
+    , len(static_cast<std::uint32_t>(std::char_traits<char>::length(aStr)))
 {
 }
 
 RED4EXT_INLINE constexpr RED4ext::StringView::StringView(std::string_view aView) noexcept
     : ptr(aView.data())
-    , len(aView.size())
+    , len(static_cast<std::uint32_t>(aView.length()))
 {
 }
 
