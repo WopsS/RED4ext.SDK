@@ -20,7 +20,7 @@ RED4EXT_INLINE constexpr RED4ext::StringView::StringView(const char* aStr) noexc
 
 RED4EXT_INLINE constexpr RED4ext::StringView::StringView(std::string_view aView) noexcept
     : ptr(aView.data())
-    , len(static_cast<std::uint32_t>(aView.size()))
+    , len(aView.size())
 {
 }
 
