@@ -11,93 +11,30 @@ struct CString;
 #pragma pack(push, 4)
 struct StringView
 {
-    RED4EXT_INLINE constexpr StringView() noexcept
-        : ptr(nullptr)
-        , len(0u)
-    {
-    }
+    constexpr StringView() noexcept;
+    constexpr StringView(const char* aStr) noexcept;
+    constexpr StringView(std::string_view aView) noexcept;
+    StringView(const RED4ext::CString& aStr) noexcept;
 
-    RED4EXT_INLINE constexpr StringView(const char* aStr) noexcept
-        : ptr(aStr)
-        , len(std::char_traits<char>::length(aStr))
-    {
-    }
+    constexpr bool IsValid() const noexcept;
+    constexpr operator bool() const noexcept;
 
-    RED4EXT_INLINE constexpr StringView(std::string_view aView) noexcept
-        : ptr(aView.data())
-        , len(static_cast<std::uint32_t>(aView.size()))
-    {
-    }
-
-    RED4EXT_INLINE StringView(const RED4ext::CString& aStr) noexcept;
-
-    RED4EXT_INLINE constexpr bool IsValid() const noexcept
-    {
-        return ptr && len > 0u;
-    }
-
-    RED4EXT_INLINE constexpr operator bool() const noexcept
-    {
-        return IsValid();
-    }
-
-    RED4EXT_INLINE constexpr bool operator==(const StringView& aRhs) const noexcept
-    {
-        return Length() == aRhs.Length() && std::char_traits<char>::compare(Data(), aRhs.Data(), Length());
-    }
-
-    RED4EXT_INLINE constexpr bool operator!=(const StringView& aRhs) const noexcept
-    {
-        return !(*this == aRhs);
-    }
-
-    RED4EXT_INLINE constexpr bool operator==(const char* aRhs) const noexcept
-    {
-        return *this == StringView{aRhs};
-    }
-
-    RED4EXT_INLINE constexpr bool operator!=(const char* aRhs) const noexcept
-    {
-        return *this != StringView{aRhs};
-    }
-
-    RED4EXT_INLINE constexpr bool operator==(std::string_view aRhs) const noexcept
-    {
-        return *this == StringView{aRhs};
-    }
-
-    RED4EXT_INLINE constexpr bool operator!=(std::string_view aRhs) const noexcept
-    {
-        return *this != StringView{aRhs};
-    }
-
+    constexpr bool operator==(const StringView& aRhs) const noexcept;
+    constexpr bool operator!=(const StringView& aRhs) const noexcept;
+    constexpr bool operator==(const char* aRhs) const noexcept;
+    constexpr bool operator!=(const char* aRhs) const noexcept;
+    constexpr bool operator==(std::string_view aRhs) const noexcept;
+    constexpr bool operator!=(std::string_view aRhs) const noexcept;
     bool operator==(const RED4ext::CString& aRhs) const noexcept;
     bool operator!=(const RED4ext::CString& aRhs) const noexcept;
 
-    RED4EXT_INLINE constexpr char operator[](std::size_t aIndex) const noexcept
-    {
-        return Data()[aIndex];
-    }
+    constexpr char operator[](std::size_t aIndex) const noexcept;
 
-    RED4EXT_INLINE constexpr const char* Data() const noexcept
-    {
-        return ptr;
-    }
+    constexpr const char* Data() const noexcept;
+    constexpr std::uint32_t Length() const noexcept;
 
-    RED4EXT_INLINE constexpr std::uint32_t Length() const noexcept
-    {
-        return len;
-    }
-
-    RED4EXT_INLINE constexpr const char* begin() const noexcept
-    {
-        return Data();
-    }
-
-    RED4EXT_INLINE constexpr const char* end() const noexcept
-    {
-        return Data() + Length();
-    }
+    constexpr const char* begin() const noexcept;
+    constexpr const char* end() const noexcept;
 
     const char* ptr{};
     std::uint32_t len{};

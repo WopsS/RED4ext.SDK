@@ -8,7 +8,7 @@
 #include <RED4ext/Relocation.hpp>
 #include <RED4ext/StringView.hpp>
 
-RED4EXT_INLINE RED4ext::CommandLine* RED4ext::CommandLine::Get()
+RED4EXT_INLINE RED4ext::CommandLine* RED4ext::CommandLine::Get() noexcept
 {
     // NOTE: GetAddr is actually necessary here
 
