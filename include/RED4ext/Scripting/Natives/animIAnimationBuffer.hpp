@@ -1,8 +1,8 @@
 #pragma once
 
-#include <cstdint>
-#include <RED4ext/Scripting/Natives/Generated/anim/AnimDataAddress.hpp>
 #include <RED4ext/ISerializable.hpp>
+#include <RED4ext/Scripting/Natives/Generated/anim/AnimDataAddress.hpp>
+#include <cstdint>
 
 namespace RED4ext
 {
