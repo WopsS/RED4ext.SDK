@@ -22,8 +22,8 @@ RED4EXT_INLINE bool RED4ext::anim::IAnimationBuffer::HasInplaceCompressedBuffer(
     return true;
 }
 
-//returns AnimDataAddress but need ctor
-//maybe hook og func?
+// returns AnimDataAddress but need ctor
+// maybe hook og func?
 RED4EXT_INLINE void* RED4ext::anim::IAnimationBuffer::GetDataAddress()
 {
 }
