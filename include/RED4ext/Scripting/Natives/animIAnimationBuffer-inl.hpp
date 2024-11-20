@@ -6,10 +6,12 @@
 
 RED4EXT_INLINE bool RED4ext::anim::IAnimationBuffer::Load()
 {
+    return false;
 }
 
 RED4EXT_INLINE bool RED4ext::anim::IAnimationBuffer::Unload()
 {
+    return false;
 }
 
 RED4EXT_INLINE bool RED4ext::anim::IAnimationBuffer::IsReady()
@@ -24,7 +26,7 @@ RED4EXT_INLINE bool RED4ext::anim::IAnimationBuffer::HasInplaceCompressedBuffer(
 
 // returns AnimDataAddress but need ctor
 // maybe hook og func?
-RED4EXT_INLINE void* RED4ext::anim::IAnimationBuffer::GetDataAddress()
+RED4EXT_INLINE void RED4ext::anim::IAnimationBuffer::GetDataAddress()
 {
 }
 
@@ -42,6 +44,7 @@ RED4EXT_INLINE void RED4ext::anim::IAnimationBuffer::sub_138()
 
 RED4EXT_INLINE bool RED4ext::anim::IAnimationBuffer::HasFallbackFrames()
 {
+    return false;
 }
 
 RED4EXT_INLINE void RED4ext::anim::IAnimationBuffer::sub_140()
@@ -71,6 +74,7 @@ RED4EXT_INLINE void RED4ext::anim::IAnimationBuffer::sub_170()
 
 RED4EXT_INLINE bool RED4ext::anim::IAnimationBuffer::sub_178()
 {
+    return false;
 }
 
 RED4EXT_INLINE void RED4ext::anim::IAnimationBuffer::sub_180()
