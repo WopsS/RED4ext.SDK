@@ -21,7 +21,7 @@ struct IAnimationBuffer : ISerializable
     virtual bool sub_100() = 0;
     virtual float GetDuration() = 0;
     virtual float GetFPS() = 0;
-    virtual void* GetDataAddress();
+    virtual void GetDataAddress();
     virtual void GetSize();
     virtual void GetNumExtraJoints() = 0;
     virtual void GetExtraData();
