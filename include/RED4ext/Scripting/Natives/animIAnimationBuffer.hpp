@@ -35,7 +35,6 @@ struct IAnimationBuffer : ISerializable
     virtual void sub_170();
     virtual bool sub_178();
     virtual void sub_180();
-
 };
 RED4EXT_ASSERT_SIZE(IAnimationBuffer, 0x30);
 } // namespace anim
