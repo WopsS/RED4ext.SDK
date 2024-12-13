@@ -104,7 +104,8 @@ private:
     static QueryFunc_t GetCurrentPluginQueryFunction();
     static bool QueryCurrentPlugin(PluginInfo& aPluginInfo);
 
-    static void ShowErrorAndTerminateProcess(std::wstring_view aMsg, std::uint32_t aLastError, bool aQueryPluginInfo = true);
+    static void ShowErrorAndTerminateProcess(std::wstring_view aMsg, std::uint32_t aLastError,
+                                             bool aQueryPluginInfo = true);
 };
 
 /**
