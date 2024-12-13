@@ -7,6 +7,7 @@
 #include <mutex>
 #include <sstream>
 
+#include <RED4ext/Api/SemVer.hpp>
 #include <RED4ext/Common.hpp>
 #include <RED4ext/Detail/Memory.hpp>
 
@@ -34,57 +35,11 @@ uintptr_t RED4ext::UniversalRelocBase::Resolve(uint32_t aHash)
             stream << L"Failed to find the address for the hash (" << std::dec << aHash << ") provided by the plugin.\n"
                    << L"This issue is likely caused by the mod using an incorrect or outdated hash.";
 
-            ShowErrorAndTerminateProcess(stream.str(), GetLastError());
+            ShowErrorAndTerminateProcess(stream.str(), 0);
         }
 
         return address;
     }
-}
-
-RED4EXT_INLINE HMODULE RED4ext::UniversalRelocBase::GetCurrentModuleHandle()
-{
-    HMODULE result;
-
-    if (!GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-                           reinterpret_cast<LPCWSTR>(UniversalRelocBase::Resolve), &result))
-    {
-        auto msg = L"Unable to retrieve the handle for a plugin.\n"
-                   L"Normally, this issue should not happen.\n"
-                   L"\n"
-                   L"What you can do:\n"
-                   L"    1. Disable all mods.\n"
-                   L"    2. Enable them one by one.\n"
-                   L"    3. Start the game after each change to see if the issue happens again.\n"
-                   L"\n"
-                   L"By following these steps, you can identify the mod causing the issue and report it to the mod "
-                   L"author for further assistance.";
-
-        MessageBoxW(nullptr, msg, L"RED4ext.SDK", MB_ICONERROR | MB_OK);
-        TerminateProcess(GetCurrentProcess(), 1);
-    }
-
-    return result;
-}
-
-RED4EXT_INLINE std::filesystem::path RED4ext::UniversalRelocBase::GetCurrentModulePath()
-{
-    constexpr auto pathLength = MAX_PATH + 1;
-    auto handle = GetCurrentModuleHandle();
-
-    std::wstring fileName;
-    do
-    {
-        fileName.resize(fileName.size() + pathLength, L'\0');
-
-        auto length = GetModuleFileNameW(handle, fileName.data(), static_cast<uint32_t>(fileName.size()));
-        if (length > 0)
-        {
-            // Resize it to the real, std::filesystem::path" will use the string's length instead of recounting it.
-            fileName.resize(length);
-        }
-    } while (GetLastError() == ERROR_INSUFFICIENT_BUFFER);
-
-    return fileName;
 }
 
 RED4EXT_INLINE HMODULE RED4ext::UniversalRelocBase::GetRED4extModule()
@@ -126,11 +81,11 @@ RED4EXT_INLINE RED4ext::UniversalRelocBase::ResolveFunc_t RED4ext::UniversalRelo
         flag,
         []()
         {
-            constexpr auto functionName = "RED4ext_ResolveAddress";
+            constexpr auto procName = "RED4ext_ResolveAddress";
 
             auto handle = GetRED4extModule();
 
-            func = reinterpret_cast<ResolveFunc_t>(GetProcAddress(handle, functionName));
+            func = reinterpret_cast<ResolveFunc_t>(GetProcAddress(handle, procName));
             if (func == nullptr)
             {
                 auto msg =
@@ -148,21 +103,142 @@ RED4EXT_INLINE RED4ext::UniversalRelocBase::ResolveFunc_t RED4ext::UniversalRelo
     return func;
 }
 
+RED4EXT_INLINE HMODULE RED4ext::UniversalRelocBase::GetCurrentModuleHandle()
+{
+    HMODULE result;
+
+    if (!GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                            reinterpret_cast<LPCWSTR>(UniversalRelocBase::Resolve), &result))
+    {
+        auto msg = L"Unable to retrieve the handle for a plugin.\n"
+                   L"Normally, this issue should not happen.\n"
+                   L"\n"
+                   L"What you can do:\n"
+                   L"    1. Disable all mods.\n"
+                   L"    2. Enable them one by one.\n"
+                   L"    3. Start the game after each change to see if the issue happens again.\n"
+                   L"\n"
+                   L"By following these steps, you can identify the mod causing the issue and report it to the mod "
+                   L"author for further assistance.";
+
+        MessageBoxW(nullptr, msg, L"RED4ext.SDK", MB_ICONERROR | MB_OK);
+        TerminateProcess(GetCurrentProcess(), 1);
+    }
+
+    return result;
+}
+
+RED4EXT_INLINE std::filesystem::path RED4ext::UniversalRelocBase::GetCurrentModulePath()
+{
+    constexpr auto pathLength = MAX_PATH + 1;
+    auto handle = GetCurrentModuleHandle();
+
+    std::wstring fileName;
+    do
+    {
+        fileName.resize(fileName.size() + pathLength, L'\0');
+
+        auto length = GetModuleFileNameW(handle, fileName.data(), static_cast<uint32_t>(fileName.size()));
+        if (length > 0)
+        {
+            // Resize it to the real, std::filesystem::path" will use the string's length instead of recounting it.
+            fileName.resize(length);
+        }
+    } while (GetLastError() == ERROR_INSUFFICIENT_BUFFER);
+
+    return fileName;
+}
+
+RED4EXT_INLINE RED4ext::UniversalRelocBase::QueryFunc_t RED4ext::UniversalRelocBase::GetCurrentPluginQueryFunction()
+{
+    static QueryFunc_t func{nullptr};
+
+    static std::once_flag flag;
+    std::call_once(flag,
+                   []()
+                   {
+                       constexpr auto procName = "Query";
+
+                       auto handle = GetCurrentModuleHandle();
+
+                       func = reinterpret_cast<QueryFunc_t>(GetProcAddress(handle, procName));
+                       if (func == nullptr)
+                       {
+                           auto msg = L"Could not get the 'Query' function for the current mod.\n"
+                                      L"Normally, this issue should not happen.\n"
+                                      L"\n"
+                                      L"If you are the mod's developer, verify that your mod was loaded by RED4ext and "
+                                      L"that it exports the 'Query' function needed for the mod to interact with "
+                                      L"RED4ext. Alternatively, you may need to provide your own address resolver.";
+
+                           ShowErrorAndTerminateProcess(msg, GetLastError(), false);
+                       }
+                   });
+
+    return func;
+}
+
+RED4EXT_INLINE bool RED4ext::UniversalRelocBase::QueryCurrentPlugin(PluginInfo& aPluginInfo)
+{
+    auto queryFunc = GetCurrentPluginQueryFunction();
+    if (!queryFunc)
+    {
+        return false;
+    }
+
+    try
+    {
+        queryFunc(&aPluginInfo);
+    }
+    catch (...)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 RED4EXT_INLINE void RED4ext::UniversalRelocBase::ShowErrorAndTerminateProcess(std::wstring_view aMsg,
-                                                                              std::uint32_t aLastError)
+                                                                              std::uint32_t aLastError,
+                                                                              bool aQueryPluginInfo)
 {
     auto path = GetCurrentModulePath();
-    auto title = path.stem();
+
+    std::wstring title = path.stem();
+    std::wstring version = L"QUERY WAS DISABLED";
+
+    if (aQueryPluginInfo)
+    {
+        PluginInfo pluginInfo{};
+
+        auto isQuerySuccessful = QueryCurrentPlugin(pluginInfo);
+        if (isQuerySuccessful)
+        {
+            if (pluginInfo.name)
+            {
+                title = pluginInfo.name;
+            }
+
+            version = std::to_wstring(pluginInfo.version);
+        }
+        else
+        {
+            version = L"QUERY FAILED";
+        }
+    }
+
+    title += L" - Address Resolver";
 
     std::wostringstream msg;
     msg << aMsg << L"\n"
         << L"-------------------\n"
-        << L"The mod has encountered a critical error and needs to terminate the game's process to prevent unexpected "
-           L"behavior in the game.\n"
+        << L"The mod has encountered a critical error while trying to resolve an address hash and needs to terminate "
+           L"the game's process to prevent unexpected behavior in the game.\n"
         << L"-------------------\n"
         << L"Here is some debug information that may help resolve or report the issue:\n"
-        << L"    - Error Code: " << std::dec << aLastError << "\n"
-        << L"    - Mod Path: " << path.c_str();
+        << L"    - Error Code (Win32): " << std::dec << aLastError << "\n"
+        << L"    - Version: " << version << "\n"
+        << L"    - Path: " << path.c_str();
 
     MessageBoxW(nullptr, msg.str().c_str(), title.c_str(), MB_ICONERROR | MB_OK);
     TerminateProcess(GetCurrentProcess(), 1);
