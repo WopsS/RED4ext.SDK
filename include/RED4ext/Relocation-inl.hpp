@@ -45,8 +45,8 @@ RED4EXT_INLINE HMODULE RED4ext::UniversalRelocBase::GetCurrentModuleHandle()
 {
     HMODULE result;
 
-    if (!GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-                           reinterpret_cast<TCHAR*>(UniversalRelocBase::Resolve), &result))
+    if (GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                           reinterpret_cast<LPCWSTR>(UniversalRelocBase::Resolve), &result))
     {
         auto msg = L"Unable to retrieve the handle for a plugin.\n"
                    L"Normally, this issue should not happen.\n"
