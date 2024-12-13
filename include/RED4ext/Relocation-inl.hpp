@@ -74,7 +74,7 @@ RED4EXT_INLINE std::filesystem::path RED4ext::UniversalRelocBase::GetCurrentModu
     std::wstring fileName;
     do
     {
-        fileName.resize(fileName.size() + pathLength, '\0');
+        fileName.resize(fileName.size() + pathLength, L'\0');
 
         auto length = GetModuleFileNameW(handle, fileName.data(), static_cast<uint32_t>(fileName.size()));
         if (length > 0)
