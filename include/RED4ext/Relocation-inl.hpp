@@ -110,16 +110,20 @@ RED4EXT_INLINE HMODULE RED4ext::UniversalRelocBase::GetCurrentModuleHandle()
     if (!GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
                             reinterpret_cast<LPCWSTR>(UniversalRelocBase::Resolve), &result))
     {
-        auto msg = L"Unable to retrieve the handle for a plugin.\n"
-                   L"Normally, this issue should not happen.\n"
-                   L"\n"
-                   L"What you can do:\n"
-                   L"    1. Disable all mods.\n"
-                   L"    2. Enable them one by one.\n"
-                   L"    3. Start the game after each change to see if the issue happens again.\n"
-                   L"\n"
-                   L"By following these steps, you can identify the mod causing the issue and report it to the mod "
-                   L"author for further assistance.";
+        auto msg =
+            L"Unable to retrieve the handle for a plugin.\n"
+            L"Normally, this issue should not happen.\n"
+            L"\n"
+            L"What you can do:\n"
+            L"    1. Disable all mods.\n"
+            L"    2. Enable them one by one.\n"
+            L"    3. Start the game after each change to see if the issue happens again.\n"
+            L"\n"
+            L"For more detailed instructions on identifying the mod causing the issue, visit the following link:\n"
+            L"    https://tinyurl.com/2zvuctb6\n"
+            L"\n"
+            L"By following these instructions, you can identify the mod causing the issue and report it to the mod "
+            L"author for further assistance.";
 
         MessageBoxW(nullptr, msg, L"RED4ext.SDK", MB_ICONERROR | MB_OK);
         TerminateProcess(GetCurrentProcess(), 1);
