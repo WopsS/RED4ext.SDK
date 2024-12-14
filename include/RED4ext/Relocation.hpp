@@ -96,6 +96,8 @@ private:
     using ResolveFunc_t = std::uintptr_t (*)(std::uint32_t);
 
     static HMODULE GetRED4extModule();
+
+    static ResolveFunc_t InitializeAddressResolverFunction();
     static ResolveFunc_t GetAddressResolverFunction();
 
     static HMODULE GetCurrentModuleHandle();

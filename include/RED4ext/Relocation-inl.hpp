@@ -44,62 +44,52 @@ uintptr_t RED4ext::UniversalRelocBase::Resolve(uint32_t aHash)
 
 RED4EXT_INLINE HMODULE RED4ext::UniversalRelocBase::GetRED4extModule()
 {
-    static HMODULE handle{nullptr};
+    constexpr auto moduleName = L"RED4ext.dll";
 
-    static std::once_flag flag;
-    std::call_once(flag,
-                   []()
-                   {
-                       constexpr auto moduleName = L"RED4ext.dll";
+    auto handle = GetModuleHandleW(moduleName);
+    if (!handle)
+    {
+        auto msg = L"The mod you are using could not locate the necessary module (i.e. RED4ext.dll) in the "
+                   L"loaded modules, which is required by the mod to resolve addresses correctly.\n"
+                   L"This may occur if RED4ext is not properly loaded into the current process.\n"
+                   L"\n"
+                   L"Please ensure that RED4ext is correctly installed.\n"
+                   L"\n"
+                   L"If you are the mod's developer, verify that your mod was loaded by RED4ext. "
+                   L"Alternatively, you may need to provide your own address resolver.";
 
-                       handle = GetModuleHandleW(moduleName);
-                       if (!handle)
-                       {
-                           auto msg =
-                               L"The mod you are using could not locate the necessary module (i.e. RED4ext.dll) in the "
-                               L"loaded modules, which is required by the mod to resolve addresses correctly.\n"
-                               L"This may occur if RED4ext is not properly loaded into the current process.\n"
-                               L"\n"
-                               L"Please ensure that RED4ext is correctly installed.\n"
-                               L"\n"
-                               L"If you are the mod's developer, verify that your mod was loaded by RED4ext. "
-                               L"Alternatively, you may need to provide your own address resolver.";
-
-                           ShowErrorAndTerminateProcess(msg, GetLastError());
-                       }
-                   });
+        ShowErrorAndTerminateProcess(msg, GetLastError());
+    }
 
     return handle;
 }
 
+RED4EXT_INLINE RED4ext::UniversalRelocBase::ResolveFunc_t RED4ext::UniversalRelocBase::
+    InitializeAddressResolverFunction()
+{
+    constexpr auto procName = "RED4ext_ResolveAddress";
+
+    auto handle = GetRED4extModule();
+
+    auto func = reinterpret_cast<ResolveFunc_t>(GetProcAddress(handle, procName));
+    if (func == nullptr)
+    {
+        auto msg = L"The mod you are using is unable to find the required address resolver function from RED4ext.\n"
+                   L"This may occur if RED4ext is not properly loaded, OR if the mod is incompatible with the current "
+                   L"version of RED4ext.\n"
+                   L"\n"
+                   L"Please ensure that RED4ext is correctly installed AND that both RED4ext and the mod are "
+                   L"up-to-date.";
+
+        ShowErrorAndTerminateProcess(msg, GetLastError());
+    }
+
+    return func;
+}
+
 RED4EXT_INLINE RED4ext::UniversalRelocBase::ResolveFunc_t RED4ext::UniversalRelocBase::GetAddressResolverFunction()
 {
-    static ResolveFunc_t func{nullptr};
-
-    static std::once_flag flag;
-    std::call_once(
-        flag,
-        []()
-        {
-            constexpr auto procName = "RED4ext_ResolveAddress";
-
-            auto handle = GetRED4extModule();
-
-            func = reinterpret_cast<ResolveFunc_t>(GetProcAddress(handle, procName));
-            if (func == nullptr)
-            {
-                auto msg =
-                    L"The mod you are using is unable to find the required address resolver function from RED4ext.\n"
-                    L"This may occur if RED4ext is not properly loaded, OR if the mod is incompatible with the current "
-                    L"version of RED4ext.\n"
-                    L"\n"
-                    L"Please ensure that RED4ext is correctly installed AND that both RED4ext and the mod are "
-                    L"up-to-date.";
-
-                ShowErrorAndTerminateProcess(msg, GetLastError());
-            }
-        });
-
+    static const ResolveFunc_t func = InitializeAddressResolverFunction();
     return func;
 }
 
@@ -155,29 +145,22 @@ RED4EXT_INLINE std::filesystem::path RED4ext::UniversalRelocBase::GetCurrentModu
 
 RED4EXT_INLINE RED4ext::UniversalRelocBase::QueryFunc_t RED4ext::UniversalRelocBase::GetCurrentPluginQueryFunction()
 {
-    static QueryFunc_t func{nullptr};
+    constexpr auto procName = "Query";
 
-    static std::once_flag flag;
-    std::call_once(flag,
-                   []()
-                   {
-                       constexpr auto procName = "Query";
+    auto handle = GetCurrentModuleHandle();
 
-                       auto handle = GetCurrentModuleHandle();
+    auto func = reinterpret_cast<QueryFunc_t>(GetProcAddress(handle, procName));
+    if (func == nullptr)
+    {
+        auto msg = L"Could not get the 'Query' function for the current mod.\n"
+                   L"Normally, this issue should not happen.\n"
+                   L"\n"
+                   L"If you are the mod's developer, verify that your mod was loaded by RED4ext and "
+                   L"that it exports the 'Query' function needed for the mod to interact with "
+                   L"RED4ext. Alternatively, you may need to provide your own address resolver.";
 
-                       func = reinterpret_cast<QueryFunc_t>(GetProcAddress(handle, procName));
-                       if (func == nullptr)
-                       {
-                           auto msg = L"Could not get the 'Query' function for the current mod.\n"
-                                      L"Normally, this issue should not happen.\n"
-                                      L"\n"
-                                      L"If you are the mod's developer, verify that your mod was loaded by RED4ext and "
-                                      L"that it exports the 'Query' function needed for the mod to interact with "
-                                      L"RED4ext. Alternatively, you may need to provide your own address resolver.";
-
-                           ShowErrorAndTerminateProcess(msg, GetLastError(), false);
-                       }
-                   });
+        ShowErrorAndTerminateProcess(msg, GetLastError(), false);
+    }
 
     return func;
 }
@@ -209,7 +192,7 @@ RED4EXT_INLINE void RED4ext::UniversalRelocBase::ShowErrorAndTerminateProcess(st
     auto path = GetCurrentModulePath();
 
     std::wstring title = path.stem();
-    std::wstring version = L"QUERY WAS DISABLED";
+    std::wstring version = L"Not available (Query was intentionally disabled)";
 
     if (aQueryPluginInfo)
     {
@@ -227,7 +210,7 @@ RED4EXT_INLINE void RED4ext::UniversalRelocBase::ShowErrorAndTerminateProcess(st
         }
         else
         {
-            version = L"QUERY FAILED";
+            version = L"Not available (Query failed)";
         }
     }
 
