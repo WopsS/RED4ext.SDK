@@ -26,7 +26,7 @@ uintptr_t RED4ext::UniversalRelocBase::Resolve(uint32_t aHash)
     }
     else
     {
-        auto resolveFunc = GetAddressResolverFunction();
+        const auto resolveFunc = GetAddressResolverFunction();
 
         auto address = resolveFunc(aHash);
         if (address == 0)
@@ -42,11 +42,11 @@ uintptr_t RED4ext::UniversalRelocBase::Resolve(uint32_t aHash)
     }
 }
 
-RED4EXT_INLINE HMODULE RED4ext::UniversalRelocBase::GetRED4extModule()
+RED4EXT_INLINE const HMODULE RED4ext::UniversalRelocBase::GetRED4extModule()
 {
-    constexpr auto moduleName = L"RED4ext.dll";
+    static constexpr auto moduleName = L"RED4ext.dll";
 
-    auto handle = GetModuleHandleW(moduleName);
+    const auto handle = GetModuleHandleW(moduleName);
     if (!handle)
     {
         auto msg = L"The mod you are using could not locate the necessary module (i.e. RED4ext.dll) in the "
@@ -64,12 +64,12 @@ RED4EXT_INLINE HMODULE RED4ext::UniversalRelocBase::GetRED4extModule()
     return handle;
 }
 
-RED4EXT_INLINE RED4ext::UniversalRelocBase::ResolveFunc_t RED4ext::UniversalRelocBase::
+RED4EXT_INLINE const RED4ext::UniversalRelocBase::ResolveFunc_t RED4ext::UniversalRelocBase::
     InitializeAddressResolverFunction()
 {
-    constexpr auto procName = "RED4ext_ResolveAddress";
+    static constexpr auto procName = "RED4ext_ResolveAddress";
 
-    auto handle = GetRED4extModule();
+    const auto handle = GetRED4extModule();
 
     auto func = reinterpret_cast<ResolveFunc_t>(GetProcAddress(handle, procName));
     if (func == nullptr)
@@ -87,20 +87,21 @@ RED4EXT_INLINE RED4ext::UniversalRelocBase::ResolveFunc_t RED4ext::UniversalRelo
     return func;
 }
 
-RED4EXT_INLINE RED4ext::UniversalRelocBase::ResolveFunc_t RED4ext::UniversalRelocBase::GetAddressResolverFunction()
+RED4EXT_INLINE const RED4ext::UniversalRelocBase::ResolveFunc_t RED4ext::UniversalRelocBase::
+    GetAddressResolverFunction()
 {
     static const ResolveFunc_t func = InitializeAddressResolverFunction();
     return func;
 }
 
-RED4EXT_INLINE HMODULE RED4ext::UniversalRelocBase::GetCurrentModuleHandle()
+RED4EXT_INLINE const HMODULE RED4ext::UniversalRelocBase::GetCurrentModuleHandle()
 {
     HMODULE result;
 
     if (!GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
                             reinterpret_cast<LPCWSTR>(UniversalRelocBase::Resolve), &result))
     {
-        auto msg =
+        static constexpr auto msg =
             L"Unable to retrieve the handle for a plugin.\n"
             L"Normally, this issue should not happen.\n"
             L"\n"
@@ -122,34 +123,37 @@ RED4EXT_INLINE HMODULE RED4ext::UniversalRelocBase::GetCurrentModuleHandle()
     return result;
 }
 
-RED4EXT_INLINE std::filesystem::path RED4ext::UniversalRelocBase::GetCurrentModulePath()
+RED4EXT_INLINE const std::filesystem::path RED4ext::UniversalRelocBase::GetCurrentModulePath()
 {
-    constexpr auto pathLength = MAX_PATH + 1;
-    auto handle = GetCurrentModuleHandle();
+    static constexpr auto pathLength = MAX_PATH;
+    const auto handle = GetCurrentModuleHandle();
 
     std::wstring fileName;
+    DWORD length = 0;
+
     do
     {
         fileName.resize(fileName.size() + pathLength, L'\0');
-
-        auto length = GetModuleFileNameW(handle, fileName.data(), static_cast<uint32_t>(fileName.size()));
-        if (length > 0)
-        {
-            // Resize it to the real, std::filesystem::path" will use the string's length instead of recounting it.
-            fileName.resize(length);
-        }
+        length = GetModuleFileNameW(handle, fileName.data(), static_cast<uint32_t>(fileName.size()));
     } while (GetLastError() == ERROR_INSUFFICIENT_BUFFER);
+
+    if (length > 0)
+    {
+        // Resize it to the real, std::filesystem::path" will use the string's length instead of recounting it.
+        fileName.resize(length);
+    }
 
     return fileName;
 }
 
-RED4EXT_INLINE RED4ext::UniversalRelocBase::QueryFunc_t RED4ext::UniversalRelocBase::GetCurrentPluginQueryFunction()
+RED4EXT_INLINE const RED4ext::UniversalRelocBase::QueryFunc_t RED4ext::UniversalRelocBase::
+    GetCurrentPluginQueryFunction()
 {
-    constexpr auto procName = "Query";
+    static constexpr auto procName = "Query";
 
-    auto handle = GetCurrentModuleHandle();
+    const auto handle = GetCurrentModuleHandle();
 
-    auto func = reinterpret_cast<QueryFunc_t>(GetProcAddress(handle, procName));
+    const auto func = reinterpret_cast<QueryFunc_t>(GetProcAddress(handle, procName));
     if (func == nullptr)
     {
         auto msg = L"Could not get the 'Query' function for the current mod.\n"
@@ -167,7 +171,7 @@ RED4EXT_INLINE RED4ext::UniversalRelocBase::QueryFunc_t RED4ext::UniversalRelocB
 
 RED4EXT_INLINE bool RED4ext::UniversalRelocBase::QueryCurrentPlugin(PluginInfo& aPluginInfo)
 {
-    auto queryFunc = GetCurrentPluginQueryFunction();
+    const auto queryFunc = GetCurrentPluginQueryFunction();
     if (!queryFunc)
     {
         return false;
@@ -189,7 +193,7 @@ RED4EXT_INLINE void RED4ext::UniversalRelocBase::ShowErrorAndTerminateProcess(st
                                                                               std::uint32_t aLastError,
                                                                               bool aQueryPluginInfo)
 {
-    auto path = GetCurrentModulePath();
+    const auto path = GetCurrentModulePath();
 
     std::wstring title = path.stem();
     std::wstring version = L"Not available (Query was intentionally disabled)";
