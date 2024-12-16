@@ -95,15 +95,15 @@ private:
     using QueryFunc_t = void (*)(PluginInfo*);
     using ResolveFunc_t = std::uintptr_t (*)(std::uint32_t);
 
-    static const HMODULE GetRED4extModule();
+    static HMODULE GetRED4extModule();
 
-    static const ResolveFunc_t InitializeAddressResolverFunction();
-    static const ResolveFunc_t GetAddressResolverFunction();
+    static ResolveFunc_t InitializeAddressResolverFunction();
+    static ResolveFunc_t GetAddressResolverFunction();
 
-    static const HMODULE GetCurrentModuleHandle();
-    static const std::filesystem::path GetCurrentModulePath();
+    static HMODULE GetCurrentModuleHandle();
+    static std::filesystem::path GetCurrentModulePath();
 
-    static const QueryFunc_t GetCurrentPluginQueryFunction();
+    static QueryFunc_t GetCurrentPluginQueryFunction();
     static bool QueryCurrentPlugin(PluginInfo& aPluginInfo);
 
     static void ShowErrorAndTerminateProcess(std::wstring_view aMsg, std::uint32_t aLastError,
