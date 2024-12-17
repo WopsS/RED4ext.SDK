@@ -13,7 +13,7 @@
 
 RED4EXT_INLINE uintptr_t RED4ext::RelocBase::GetImageBase()
 {
-    static const auto base = reinterpret_cast<uintptr_t>(GetModuleHandle(nullptr));
+    static const auto base = std::bit_cast<uintptr_t>(GetModuleHandle(nullptr));
     return base;
 }
 
@@ -153,7 +153,7 @@ RED4EXT_INLINE RED4ext::UniversalRelocBase::QueryFunc_t RED4ext::UniversalRelocB
 
     const auto handle = GetCurrentModuleHandle();
 
-    const auto func = reinterpret_cast<QueryFunc_t>(GetProcAddress(handle, procName));
+    const auto func = std::bit_cast<QueryFunc_t>(GetProcAddress(handle, procName));
     if (func == nullptr)
     {
         static constexpr auto msg = L"Could not get the 'Query' function for the current mod.\n"
