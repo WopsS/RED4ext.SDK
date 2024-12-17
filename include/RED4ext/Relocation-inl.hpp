@@ -112,7 +112,9 @@ RED4EXT_INLINE HMODULE RED4ext::UniversalRelocBase::GetCurrentModuleHandle()
             L"    3. Start the game after each change to see if the issue happens again.\n"
             L"\n"
             L"For more detailed instructions on identifying the mod causing the issue, visit the following link:\n"
-            L"    https://tinyurl.com/2zvuctb6\n"
+            L"    "
+            L"https://wiki.redmodding.org/cyberpunk-2077-modding/for-mod-users/"
+            L"user-guide-troubleshooting#finding-the-broken-mod-bisecting\n"
             L"\n"
             L"By following these instructions, you can identify the mod causing the issue and report it to the mod "
             L"author for further assistance.";
@@ -218,7 +220,7 @@ RED4EXT_INLINE void RED4ext::UniversalRelocBase::ShowErrorAndTerminateProcess(st
         }
     }
 
-    title += L" - Address Resolver";
+    title += L": Address Resolver";
 
     std::wostringstream msg;
     msg << aMsg << L"\n"
@@ -228,6 +230,7 @@ RED4EXT_INLINE void RED4ext::UniversalRelocBase::ShowErrorAndTerminateProcess(st
         << L"-----------------------------\n"
         << L"Here is some debug information that may help resolve or report the issue:\n"
         << L"    - Error Code (Win32): " << std::dec << aLastError << "\n"
+        << L"    - Plugin: " << title << "\n"
         << L"    - Version: " << version << "\n"
         << L"    - Path: " << path.c_str();
 
