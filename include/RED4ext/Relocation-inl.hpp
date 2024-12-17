@@ -197,8 +197,8 @@ RED4EXT_INLINE void RED4ext::UniversalRelocBase::ShowErrorAndTerminateProcess(st
 {
     const auto path = GetCurrentModulePath();
 
-    std::wstring title = path.stem();
-    std::wstring version = L"Not available (Query was intentionally disabled)";
+    std::wstring pluginName = path.stem();
+    std::wstring pluginVersion = L"Not available (Query was intentionally disabled)";
 
     if (aQueryPluginInfo)
     {
@@ -209,18 +209,18 @@ RED4EXT_INLINE void RED4ext::UniversalRelocBase::ShowErrorAndTerminateProcess(st
         {
             if (pluginInfo.name)
             {
-                title = pluginInfo.name;
+                pluginName = pluginInfo.name;
             }
 
-            version = std::to_wstring(pluginInfo.version);
+            pluginVersion = std::to_wstring(pluginInfo.version);
         }
         else
         {
-            version = L"Not available (Query failed)";
+            pluginVersion = L"Not available (Query failed)";
         }
     }
 
-    title += L": Address Resolver";
+    auto title = pluginName + L": Address Resolver";
 
     std::wostringstream msg;
     msg << aMsg << L"\n"
@@ -230,8 +230,8 @@ RED4EXT_INLINE void RED4ext::UniversalRelocBase::ShowErrorAndTerminateProcess(st
         << L"-----------------------------\n"
         << L"Here is some debug information that may help resolve or report the issue:\n"
         << L"    - Error Code (Win32): " << std::dec << aLastError << "\n"
-        << L"    - Plugin: " << title << "\n"
-        << L"    - Version: " << version << "\n"
+        << L"    - Plugin: " << pluginName << "\n"
+        << L"    - Version: " << pluginVersion << "\n"
         << L"    - Path: " << path.c_str();
 
     MessageBoxW(nullptr, msg.str().c_str(), title.c_str(), MB_ICONERROR | MB_OK);
