@@ -222,10 +222,10 @@ RED4EXT_INLINE void RED4ext::UniversalRelocBase::ShowErrorAndTerminateProcess(st
 
     std::wostringstream msg;
     msg << aMsg << L"\n"
-        << L"-------------------\n"
+        << L"-----------------------------\n"
         << L"The mod has encountered a critical error while trying to resolve an address hash and needs to terminate "
            L"the game's process to prevent unexpected behavior in the game.\n"
-        << L"-------------------\n"
+        << L"-----------------------------\n"
         << L"Here is some debug information that may help resolve or report the issue:\n"
         << L"    - Error Code (Win32): " << std::dec << aLastError << "\n"
         << L"    - Version: " << version << "\n"
